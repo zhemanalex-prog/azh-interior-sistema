@@ -1,0 +1,2552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Система организации разработки рабочей документации для дизайнеров интерьеров: этапы, шаблоны, контроль сроков, приёмка и управление изменениями.">
+  <meta property="og:title" content="AZh Interior — система рабочей документации">
+  <meta property="og:description" content="9 этапов, карточка проекта, шаблоны документов и порядок приёмки результатов.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>">
+  <title>AZh Interior — Система организации разработки рабочей документации</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --bg: #f5f0e8; --paper: #faf8f5; --ink: #171513; --soft: #3b332d;
+      --gold: #b79467; --muted: #756858; --line: #e2d8ca; --sage: #566849; --sage-bg: #edf0e9; --card-w: 840px;
+      --status-green: #e6efe6; --status-green-text: #2e5c2a;
+      --status-red: #fce8e6; --status-red-text: #a83226;
+      --fill-bg: #fef4d5;
+      --fill-border: #d4a373;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main) !important; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); line-height: 1.5; padding-bottom: 100px; }
+    
+    /* Шапка */
+    .fixed-header { position: sticky; top: 0; z-index: 100; background: var(--paper); border-bottom: 1px solid var(--line); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    header { padding: 20px 20px 12px; text-align: center; border-bottom: 1px solid var(--line); position: relative; }
+    .brand { font-size: 24px; font-weight: 700; letter-spacing: 0.06em; color: var(--ink); text-transform: uppercase; }
+    .subtitle { font-size: 10px; text-transform: uppercase; letter-spacing: 0.22em; color: var(--gold); font-weight: 700; margin-top: 4px; }
+    .motto { max-width: 720px; margin: 8px auto 0; font-size: 12px; color: var(--soft); line-height: 1.5; }
+    
+    .header-cta { position: absolute; top: 20px; right: 20px; }
+    @media (max-width: 900px) { .header-cta { position: static; margin-top: 10px; display: block; } }
+    .btn-cta { background: var(--gold); color: #fff; padding: 10px 20px; text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 2px; transition: background 0.2s; display: inline-block; }
+    .btn-cta:hover { background: #a07d4f; }
+    
+    /* Панель управления */
+    .controls { display: flex; justify-content: center; gap: 12px; padding: 12px 20px; flex-wrap: wrap; background: var(--paper); align-items: center; border-top: 1px solid var(--line); }
+    .btn { background: var(--paper); border: 1px solid var(--line); padding: 9px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); cursor: pointer; transition: all 0.2s; border-radius: 2px; }
+    .btn:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .progress-info { font-size: 12px; color: var(--soft); font-weight: 600; margin-left: 15px; background: var(--sage-bg); padding: 6px 12px; border-radius: 2px; }
+    .progress-info span { color: var(--sage); font-size: 14px; }
+
+    /* === КАРТОЧКА ПРОЕКТА === */
+    .project-card {
+      max-width: 1000px;
+      margin: 30px auto 50px;
+      padding: 0 20px;
+    }
+    .project-card-inner {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 40px rgba(23,21,19,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .project-card-header {
+      background: var(--ink);
+      color: #fff;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .project-card-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+    .project-card-header .header-meta {
+      display: flex;
+      gap: 24px;
+      font-size: 12px;
+      color: #cfc4b8;
+    }
+    .project-card-header .header-meta div {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .project-card-header .header-meta strong {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    @media (max-width: 800px) {
+      .project-grid { grid-template-columns: 1fr; }
+    }
+    .project-block {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+    .project-block:nth-child(even) { border-right: none; }
+    .project-block.full-width {
+      grid-column: 1 / -1;
+      border-right: none;
+    }
+    .project-block h3 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    .project-block h3 .badge {
+      display: inline-block;
+      background: var(--status-red);
+      color: var(--status-red-text);
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      margin-left: 8px;
+      vertical-align: middle;
+      letter-spacing: 0.05em;
+    }
+
+    .project-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(0,0,0,0.05);
+      font-size: 13px;
+    }
+    .project-field:last-child { border-bottom: none; }
+    .project-field label {
+      color: var(--muted);
+      font-weight: 500;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+    .project-field input, .project-field select {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 4px 8px;
+      font-size: 13px;
+      color: var(--ink);
+      border-radius: 2px;
+      font-family: inherit;
+      width: 60%;
+      min-width: 120px;
+    }
+    .project-field input:focus, .project-field select:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .project-field .auto-value {
+      font-weight: 600;
+      color: var(--ink);
+      text-align: right;
+      width: 60%;
+    }
+
+    .project-docs-list {
+      list-style: none;
+      font-size: 13px;
+    }
+    .project-docs-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(0,0,0,0.05);
+    }
+    .project-docs-list li:last-child { border-bottom: none; }
+    .project-docs-list select {
+      border: 1px solid var(--line);
+      padding: 2px 6px;
+      font-size: 11px;
+      background: #fff;
+      border-radius: 2px;
+    }
+    .doc-status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .doc-status.ok { background: var(--status-green); color: var(--status-green-text); }
+    .doc-status.wait { background: var(--status-red); color: var(--status-red-text); }
+    .doc-status.neutral { background: #eee; color: var(--muted); }
+
+    .project-actions {
+      padding: 20px 32px;
+      background: var(--bg);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+    }
+    .project-actions .action-btn {
+      padding: 8px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--soft);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .project-actions .action-btn:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .project-actions .action-btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .project-actions .action-btn.primary:hover { background: var(--gold); border-color: var(--gold); }
+
+    /* Вкладки внутри карточки (Производство) */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 14px 24px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--ink); }
+    .tab-btn.active {
+      color: var(--ink);
+      border-bottom-color: var(--gold);
+      background: var(--paper);
+    }
+    .tab-content {
+      display: none;
+      padding: 24px 32px;
+    }
+    .tab-content.active { display: block; }
+
+    /* Таблицы внутри карточки */
+    .card-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    .card-table th {
+      background: var(--bg);
+      color: var(--gold);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .card-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      color: var(--soft);
+      vertical-align: middle;
+    }
+    .card-table input, .card-table select {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 4px;
+      font-size: 12px;
+      font-family: inherit;
+      color: var(--ink);
+      border-radius: 2px;
+    }
+    .card-table input:focus, .card-table select:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: #fff;
+    }
+    .card-table .status-select {
+      width: auto;
+      min-width: 120px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 4px 6px;
+      font-size: 11px;
+      border-radius: 2px;
+    }
+
+    /* Списки файлов */
+    .file-list {
+      list-style: none;
+      font-size: 13px;
+    }
+    .file-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(0,0,0,0.05);
+    }
+    .file-list li:last-child { border-bottom: none; }
+    .file-list .file-link {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--gold);
+      font-size: 12px;
+    }
+    .file-list .file-link:hover { border-bottom-style: solid; }
+
+    /* Индикатор прогресса */
+    .progress-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .progress-bar-container .bar {
+      flex-grow: 1;
+      height: 6px;
+      background: var(--line);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar-container .bar-fill {
+      height: 100%;
+      background: var(--sage);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .progress-bar-container .count {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--sage);
+      white-space: nowrap;
+    }
+
+    /* Модальное окно */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(23,21,19,0.7); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-box { background: var(--paper); border: 1px solid var(--line); max-width: 800px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .modal-close { position: absolute; top: 12px; right: 16px; background: transparent; border: none; font-size: 28px; color: var(--muted); cursor: pointer; line-height: 1; }
+    .modal-box h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: var(--ink); padding-right: 30px; }
+    .modal-box p, .modal-box li { font-size: 14px; line-height: 1.7; color: var(--soft); }
+    .modal-box ul { padding-left: 20px; margin-top: 10px; margin-bottom: 15px; }
+    .modal-box .note { background: var(--sage-bg); border-left: 3px solid var(--sage); padding: 12px 16px; font-size: 13px; margin-top: 15px; }
+    .modal-box .note strong { color: var(--sage); }
+    .modal-pre { font-family: 'Courier New', monospace; font-size: 12px; background: #fff; padding: 15px; border: 1px solid var(--line); white-space: pre-wrap; line-height: 1.6; margin-top: 10px; color: var(--ink); }
+    mark.fill-me { background-color: var(--fill-bg); border-bottom: 1px dashed var(--fill-border); padding: 0 2px; color: var(--ink); font-weight: 600; border-radius: 2px; }
+
+    /* Блок "Что входит в систему" */
+    .features-section { max-width: var(--card-w); margin: 40px auto; padding: 0 20px; text-align: center; }
+    .features-title { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: var(--ink); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left; }
+    .feature-card { background: var(--paper); border: 1px solid var(--line); padding: 20px; border-radius: 4px; }
+    .feature-card h4 { font-size: 16px; margin-bottom: 8px; color: var(--ink); }
+    .feature-card p { font-size: 13px; color: var(--soft); line-height: 1.5; }
+
+    /* 9 этапов */
+    .map-container { max-width: var(--card-w); margin: 30px auto; position: relative; padding: 0 20px; }
+    .map-container::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--gold); transform: translateX(-50%); z-index: 1; }
+    .node { position: relative; z-index: 2; background: var(--paper); border: 1px solid var(--line); margin-bottom: 28px; padding: 26px; box-shadow: 0 10px 30px rgba(23,21,19,0.03); transition: transform 0.2s; }
+    .node:hover { transform: translateY(-2px); }
+    .node-header { display: flex; align-items: center; gap: 16px; cursor: pointer; user-select: none; width: 100%; background: none; border: none; text-align: left; font: inherit; }
+    .node-num { font-size: 28px; color: var(--gold); font-weight: 700; line-height: 1; }
+    .node-title { font-size: 18px; font-weight: 600; color: var(--ink); flex: 1; letter-spacing: -0.01em; }
+    .toggle-icon { font-size: 16px; font-weight: 700; color: var(--gold); width: 28px; height: 28px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--bg); }
+    .node-result { margin-top: 14px; padding: 12px 16px; background: var(--sage-bg); border-left: 3px solid var(--sage); font-size: 13px; color: var(--soft); line-height: 1.5; }
+    .node-result strong { color: #465b3b; font-weight: 600; }
+    .node-body { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); display: block; }
+    .node-body.collapsed { display: none; }
+    .steps-list { list-style: none; }
+    .steps-list li { position: relative; padding-left: 20px; margin-bottom: 8px; font-size: 13px; color: var(--soft); line-height: 1.6; }
+    .steps-list li::before { content: '•'; position: absolute; left: 0; color: var(--gold); font-size: 16px; }
+    .node-fix { margin-top: 14px; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .node-note { margin-top: 8px; font-size: 12px; color: var(--gold); font-style: italic; }
+    .action-bar { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+    .action-btn { display: inline-flex; align-items: center; justify-content: center; padding: 9px 16px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid var(--line); background: var(--paper); color: var(--soft); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .action-btn:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .action-btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .action-btn.primary:hover { background: var(--gold); border-color: var(--gold); }
+
+    .azh-cross-section { max-width: var(--card-w); margin: 40px auto; background: var(--ink); color: var(--paper); padding: 40px 36px; border-radius: 2px; }
+    .azh-cross-header { margin-bottom: 28px; }
+    .azh-cross-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 6px; }
+    .azh-cross-title { font-size: 22px; font-weight: 600; margin: 0; color: #ffffff; }
+    .azh-cross-subtitle { font-size: 12px; color: #cfc4b8; margin-top: 6px; }
+    .azh-cross-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px 24px; }
+    .azh-cross-item { border-top: 1px solid #474137; padding-top: 14px; }
+    .azh-cross-item-num { font-size: 11px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .azh-cross-item-title { font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 6px; }
+    .azh-cross-item-text { font-size: 12px; line-height: 1.6; color: #cfc4b8; margin: 0; }
+
+    .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: var(--ink); color: #fff; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; z-index: 40; cursor: pointer; }
+    .back-to-top.visible { opacity: 1; pointer-events: auto; }
+    .back-to-top:hover { background: var(--gold); transform: translateY(-3px); }
+
+    @media (max-width: 700px) {
+      .project-grid { grid-template-columns: 1fr; }
+      .project-block { border-right: none; padding: 20px; }
+      .project-block.full-width { grid-column: 1; }
+      .project-card-header { flex-direction: column; align-items: flex-start; padding: 20px; }
+      .project-card-header .header-meta { flex-direction: column; gap: 8px; }
+      .project-field { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .project-field input, .project-field select { width: 100%; }
+      .project-actions { padding: 16px; }
+      .tab-content { padding: 16px; }
+      .card-table { font-size: 11px; }
+      .card-table th, .card-table td { padding: 6px 4px; }
+    }
+
+    /* === НОВОЕ v14 === */
+
+    /* Две кнопки в шапке */
+    .header-cta-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .btn-cta.outline { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+    .btn-cta.outline:hover { background: var(--ink); color: #fff; }
+    .btn-cta.primary { background: var(--gold); color: #fff; }
+    .btn-cta.primary:hover { background: #a07d4f; }
+
+    /* Hero */
+    .hero-section { max-width: 920px; margin: 40px auto 20px; padding: 36px 24px; text-align: center; }
+    .hero-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .hero-title { font-size: 30px; font-weight: 700; line-height: 1.25; color: var(--ink); margin-bottom: 14px; letter-spacing: -0.01em; }
+    .hero-lead { font-size: 15px; line-height: 1.7; color: var(--soft); max-width: 720px; margin: 0 auto 22px; }
+    .hero-paths { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 760px; margin: 0 auto; }
+    .hero-path { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--gold); padding: 14px 18px; border-radius: 2px; text-align: left; }
+    .hero-path-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .hero-path-text { font-size: 13px; color: var(--soft); line-height: 1.55; margin: 0; }
+    @media (max-width: 700px) { .hero-paths { grid-template-columns: 1fr; } .hero-title { font-size: 24px; } }
+
+    /* "Почему важно" внутри этапа */
+    .node-why { margin-top: 14px; padding: 14px 18px; background: var(--fill-bg); border-left: 3px solid var(--gold); border-radius: 2px; }
+    .why-label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #8a6a3f; margin-bottom: 6px; }
+    .why-text { font-size: 13px; color: var(--soft); line-height: 1.6; margin: 0; }
+
+    /* Секции-таблицы ниже карты */
+    .page-section { max-width: var(--card-w); margin: 50px auto; padding: 0 20px; }
+    .page-section-header { margin-bottom: 20px; }
+    .page-section-num { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .page-section-title { font-size: 22px; font-weight: 600; color: var(--ink); margin: 0 0 8px; }
+    .page-section-lead { font-size: 13px; color: var(--soft); line-height: 1.6; margin: 0; max-width: 640px; }
+    .page-section-box { background: var(--paper); border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(23,21,19,0.04); padding: 28px 32px; border-radius: 4px; }
+
+    /* Заявка — форма */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+    .form-field { display: flex; flex-direction: column; gap: 4px; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .form-field input, .form-field textarea, .form-field select {
+      border: 1px solid var(--line); background: #fff; padding: 9px 12px; font-size: 13px;
+      color: var(--ink); border-radius: 2px; font-family: inherit;
+    }
+    .form-field input:focus, .form-field textarea:focus, .form-field select:focus { outline: none; border-color: var(--gold); }
+    .form-checkboxes { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 4px; }
+    .form-checkboxes label { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--soft); text-transform: none; letter-spacing: 0; font-weight: 400; cursor: pointer; }
+    .form-checkboxes input { width: auto; }
+    @media (max-width: 700px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* Реестр материалов — таблица */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    .data-table th { background: var(--bg); color: var(--gold); text-transform: uppercase; font-size: 10px; letter-spacing: 0.08em; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+    .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--soft); vertical-align: middle; }
+    .data-table select { border: 1px solid var(--line); padding: 4px 8px; font-size: 12px; background: #fff; border-radius: 2px; }
+
+    /* Тарифы */
+    .pricing-section { max-width: 920px; margin: 60px auto; padding: 0 20px; }
+    .pricing-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
+    @media (max-width: 800px) { .pricing-grid { grid-template-columns: 1fr; } }
+    .pricing-card { background: var(--paper); border: 1px solid var(--line); padding: 30px; border-radius: 4px; box-shadow: 0 10px 30px rgba(23,21,19,0.05); }
+    .pricing-card.featured { border-color: var(--gold); border-width: 2px; }
+    .pricing-card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .pricing-card-title { font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+    .pricing-card-price { font-size: 32px; font-weight: 700; color: var(--ink); margin: 10px 0 4px; }
+    .pricing-card-price .old { font-size: 16px; color: var(--muted); text-decoration: line-through; margin-left: 8px; font-weight: 400; }
+    .pricing-card-note { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+    .pricing-card ul { list-style: none; padding: 0; margin: 0 0 20px; }
+    .pricing-card ul li { font-size: 13px; color: var(--soft); padding: 6px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); position: relative; padding-left: 20px; }
+    .pricing-card ul li::before { content: '✓'; position: absolute; left: 0; color: var(--sage); font-weight: 700; }
+    .pricing-card .btn-cta { display: block; width: 100%; text-align: center; padding: 14px; font-size: 12px; }
+    .templates-mini-list { list-style: none; padding: 0; margin: 0 0 18px; }
+    .templates-mini-list li { font-size: 12px; color: var(--soft); padding: 5px 0; display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(0,0,0,0.05); }
+    .templates-mini-list li:last-child { border-bottom: none; }
+    .templates-mini-list .tpl-price { color: var(--ink); font-weight: 600; }
+
+    /* Модалка покупки шаблонов */
+    .templates-modal-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
+    .tpl-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 14px; align-items: center; padding: 12px 14px; background: #fff; border: 1px solid var(--line); border-radius: 2px; }
+    .tpl-row .tpl-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .tpl-row .tpl-desc { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+    .tpl-row .tpl-price-cell { font-size: 14px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+    .tpl-row .tpl-preview { font-size: 11px; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold); }
+    .tpl-row .tpl-buy { padding: 8px 14px; background: var(--ink); color: #fff; border: none; border-radius: 2px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-block; }
+    .tpl-row .tpl-buy:hover { background: var(--gold); }
+    @media (max-width: 600px) { .tpl-row { grid-template-columns: 1fr; gap: 8px; } .tpl-row .tpl-preview, .tpl-row .tpl-price-cell { justify-self: start; } }
+
+    /* Футер */
+    .site-footer { background: var(--ink); color: #cfc4b8; padding: 36px 24px; margin-top: 60px; }
+    .footer-inner { max-width: 920px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    .footer-block h5 { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .footer-block p, .footer-block li { font-size: 12px; line-height: 1.7; color: #cfc4b8; }
+    .footer-block a { color: var(--gold); text-decoration: none; }
+    .footer-block a:hover { text-decoration: underline; }
+    .footer-bottom { max-width: 920px; margin: 24px auto 0; padding-top: 18px; border-top: 1px solid #474137; font-size: 11px; color: #8a7d6d; text-align: center; }
+    @media (max-width: 700px) { .footer-inner { grid-template-columns: 1fr; } }
+
+    /* === v15: таб-навигация и мини-апп === */
+    .hero-v15 { max-width: 920px; margin: 28px auto 18px; padding: 24px 20px; text-align: center; }
+    .hero-v15 .hero-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .hero-v15 .hero-title { font-size: 26px; font-weight: 700; line-height: 1.25; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.01em; }
+    .hero-v15 .hero-lead { font-size: 14px; line-height: 1.65; color: var(--soft); max-width: 680px; margin: 0 auto; }
+
+    /* Таб-навигация — sticky под шапкой */
+    .app-nav {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      padding: 6px 16px;
+      flex-wrap: wrap;
+    }
+    .app-tab {
+      background: transparent;
+      border: none;
+      padding: 12px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-main);
+    }
+    .app-tab:hover { color: var(--ink); background: var(--bg); }
+    .app-tab.active {
+      color: var(--ink);
+      border-bottom-color: var(--gold);
+    }
+    .app-tab .tab-num {
+      font-size: 10px;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .app-tab .tab-badge {
+      background: var(--status-red);
+      color: var(--status-red-text);
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 700;
+      letter-spacing: 0;
+      min-width: 24px;
+      text-align: center;
+    }
+    .app-tab .tab-badge.filled {
+      background: var(--status-green);
+      color: var(--status-green-text);
+    }
+    .app-tab .tab-badge.partial {
+      background: var(--fill-bg);
+      color: #8a6a3f;
+    }
+    @media (max-width: 700px) {
+      .app-tab { padding: 10px 12px; font-size: 11px; }
+      .app-tab span:not(.tab-num):not(.tab-badge) { display: none; }
+      .app-tab .tab-num { font-size: 13px; }
+      .app-tab .tab-badge { font-size: 9px; }
+    }
+
+    /* Таб-панели */
+    .tab-panel { display: none; padding: 32px 20px 60px; min-height: 60vh; }
+    .tab-panel.active { display: block; }
+    .panel-intro { max-width: 920px; margin: 0 auto 24px; }
+    .panel-intro h2 { font-size: 22px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .panel-intro p { font-size: 13px; color: var(--soft); line-height: 1.6; max-width: 640px; }
+
+    /* Сетка этапов 3×3 */
+    .stages-grid {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 880px) { .stages-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .stages-grid { grid-template-columns: 1fr; } }
+
+    .stage-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 22px 22px 56px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 200px;
+      font-family: var(--font-main);
+    }
+    .stage-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--gold);
+      box-shadow: 0 10px 28px rgba(23,21,19,0.08);
+    }
+    .stage-card .stage-num {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stage-card .stage-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    .stage-card .stage-why {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-top: auto;
+    }
+    .stage-card .stage-arrow {
+      position: absolute;
+      bottom: 18px;
+      right: 22px;
+      color: var(--gold);
+      font-size: 16px;
+      font-weight: 700;
+      opacity: 0.5;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .stage-card:hover .stage-arrow { opacity: 1; transform: translateX(4px); }
+
+    /* Скрытый data-source: оригинальный map-container */
+    .map-container[data-source] { display: none; }
+
+    /* Stage modal body — переиспользует существующие классы, но внутри модалки */
+    .stage-modal-body .node-why { margin-bottom: 16px; }
+    .stage-modal-body .node-result { margin-bottom: 18px; }
+    .stage-modal-body .steps-list { padding-left: 0; list-style: none; margin-bottom: 16px; }
+    .stage-modal-body .steps-list li {
+      position: relative; padding-left: 22px; margin-bottom: 8px;
+      font-size: 13px; color: var(--soft); line-height: 1.6;
+    }
+    .stage-modal-body .steps-list li::before {
+      content: '→'; position: absolute; left: 0; color: var(--gold); font-weight: 700;
+    }
+    .stage-modal-body .node-fix {
+      background: var(--bg); padding: 12px 16px; border-radius: 2px;
+      margin-bottom: 12px; font-size: 12px; font-weight: 600;
+      color: var(--soft); text-transform: none; letter-spacing: 0;
+    }
+    .stage-modal-body .node-note {
+      font-size: 12px; color: var(--gold); font-style: italic;
+      margin-bottom: 16px; line-height: 1.55;
+    }
+    .stage-modal-body .action-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    /* Карточка проекта — прогресс-текст в шапке карточки */
+    .card-progress-inline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--sage-bg); color: var(--sage);
+      padding: 4px 10px; border-radius: 12px;
+      font-size: 11px; font-weight: 600;
+    }
+    .card-progress-inline strong { color: var(--sage); font-size: 13px; }
+
+  </style>
+
+
+</head>
+<body>
+
+  <div class="fixed-header">
+    <header>
+      <div class="brand">AZh Interior</div>
+      <div class="subtitle">Система организации разработки рабочей документации</div>
+      <div class="motto">От получения исходных материалов до передачи готового комплекта чертежей — с согласованным составом работ, сроками и поэтапной приёмкой результата.</div>
+      <div class="header-cta header-cta-group">
+        <a href="#" class="btn-cta primary" id="buyFullBtn">Купить всё — 7 900 ₽ ↗</a>
+        <button class="btn-cta outline" onclick="openBuyModal()">Купить шаблон</button>
+      </div>
+    </header>
+  </div>
+
+
+  <!-- Hero v15 (компактный) -->
+  <section class="hero-v15">
+    <div class="hero-kicker">Система рабочей документации · v15</div>
+    <h1 class="hero-title">Рабочая документация без хаоса — в 5 шагов</h1>
+    <p class="hero-lead">Единый порядок для дизайнеров, проектировщиков и чертёжников. Перемещайтесь по табам — каждый раздел открыт отдельно, без бесконечного скролла.</p>
+  </section>
+
+  <!-- Таб-навигация -->
+  <nav class="app-nav" id="appNav">
+    <button class="app-tab active" data-tab="1" onclick="switchTab(1)">
+      <span class="tab-num">01</span><span>Карта</span>
+    </button>
+    <button class="app-tab" data-tab="2" onclick="switchTab(2)">
+      <span class="tab-num">02</span><span>Заявка</span>
+      <span class="tab-badge" id="badge-zayavka">0/14</span>
+    </button>
+    <button class="app-tab" data-tab="3" onclick="switchTab(3)">
+      <span class="tab-num">03</span><span>Реестр</span>
+      <span class="tab-badge" id="badge-reestr">0/15</span>
+    </button>
+    <button class="app-tab" data-tab="4" onclick="switchTab(4)">
+      <span class="tab-num">04</span><span>Карточка</span>
+      <span class="tab-badge" id="badge-card" style="display:none;">0%</span>
+    </button>
+    <button class="app-tab" data-tab="5" onclick="switchTab(5)">
+      <span class="tab-num">05</span><span>Купить</span>
+    </button>
+  </nav>
+
+  <!-- Таб 1: Дорожная карта -->
+  <div class="tab-panel active" id="panel-1">
+    <div class="panel-intro">
+      <h2>Дорожная карта · 9 этапов</h2>
+      <p>От заявки до финального альбома. Кликните на любой этап, чтобы раскрыть шаги, фиксации, примечания и шаблоны. Каждый этап — отдельная карточка, не портянка.</p>
+    </div>
+    <div class="stages-grid">
+      <button class="stage-card" onclick="openStageModal(1)">
+        <div class="stage-num">01</div>
+        <div class="stage-title">Заявка и анализ исходных материалов</div>
+        <div class="stage-why">Чтобы дизайнер и чертёжник с первого дня знали объём работ — а не выясняли его на третьей неделе.</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(2)">
+        <div class="stage-num">02</div>
+        <div class="stage-title">Коммерческое предложение</div>
+        <div class="stage-why">Чтобы стоимость, сроки и границы работ были зафиксированы до старта — без «а мы думали, это входит».</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(3)">
+        <div class="stage-num">03</div>
+        <div class="stage-title">Формирование технического задания</div>
+        <div class="stage-why">Чтобы состав альбома, детализация и форматы были согласованы один раз — до первой линии.</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(4)">
+        <div class="stage-num">04</div>
+        <div class="stage-title">Планирование и график работ</div>
+        <div class="stage-why">Чтобы чертёжник, проектировщик и дизайнер знали даты передачи блоков — без «когда вам сдать электрику?».</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(5)">
+        <div class="stage-num">05</div>
+        <div class="stage-title">Договор и начало работ</div>
+        <div class="stage-why">Чтобы границы правок, порядок оплаты и ответственность были на бумаге — а не в переписке.</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(6)">
+        <div class="stage-num">06</div>
+        <div class="stage-title">Разработка документации</div>
+        <div class="stage-why">Чтобы каждый блок шёл по чек-листу — и не возвращался с правками из-за забытого узла или спецификации.</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(7)">
+        <div class="stage-num">07</div>
+        <div class="stage-title">Сдача этапа и акт</div>
+        <div class="stage-why">Чтобы сдача актом закрывала финансовые обязательства — и не порождала спор «это мы не согласовали».</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(8)">
+        <div class="stage-num">08</div>
+        <div class="stage-title">Корректировки и изменения</div>
+        <div class="stage-why">Чтобы 2 бесплатных раунда правок были зафиксированы — а дальше шло за отдельную плату.</div>
+        <div class="stage-arrow">→</div>
+      </button>
+      <button class="stage-card" onclick="openStageModal(9)">
+        <div class="stage-num">09</div>
+        <div class="stage-title">Финальная передача комплекта</div>
+        <div class="stage-why">Чтобы итоговый альбом передавался по чек-листу — без «ой, файл забыли» в день сдачи.</div>
+        <div class="stage-arrow">→</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Заявка -->
+  <!-- Таб 2: Заявка -->
+<div class="tab-panel" id="panel-2">
+<section class="page-section" id="section-zayavka" style="padding-top: 0;">
+    <div class="page-section-header">
+      <div class="page-section-num">Блок 1 · С чего начинается порядок</div>
+      <h2 class="page-section-title">Заявка на разработку рабочей документации</h2>
+      <p class="page-section-lead">Заполняется дизайнером или заказчиком при первичном обращении. Данные сохраняются локально в браузере и формируют основу для КП и ТЗ. Один раздел — одна заявка.</p>
+    </div>
+    <div class="page-section-box">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Заказчик / дизайнер</label>
+          <input type="text" data-save="zay_client" placeholder="ФИО или студия">
+        </div>
+        <div class="form-field">
+          <label>Контакт для связи</label>
+          <input type="text" data-save="zay_contact" placeholder="Телефон / Telegram / email">
+        </div>
+        <div class="form-field">
+          <label>Объект</label>
+          <select data-save="zay_object">
+            <option>Квартира</option><option>Дом</option><option>Апартаменты</option><option>Коммерческое помещение</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Площадь, м²</label>
+          <input type="number" data-save="zay_area" placeholder="85">
+        </div>
+        <div class="form-field">
+          <label>Этажность</label>
+          <input type="text" data-save="zay_floors" placeholder="1 этаж / 2 этажа">
+        </div>
+        <div class="form-field">
+          <label>Состав помещений</label>
+          <input type="text" data-save="zay_rooms" placeholder="гостиная, кухня, 2 спальни, 2 с/у">
+        </div>
+        <div class="form-field">
+          <label>Стадия проекта</label>
+          <select data-save="zay_stage">
+            <option>Концепция</option><option>Эскизный проект</option><option>Рабочая документация</option><option>Реализация</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Задача</label>
+          <select data-save="zay_task">
+            <option>Разработка полного рабочего альбома</option><option>Разработка отдельных разделов</option><option>Доработка существующей документации</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <label>Какие материалы уже есть</label>
+          <div class="form-checkboxes">
+            <label><input type="checkbox" data-save="zay_m_obmer">Обмерный план</label>
+            <label><input type="checkbox" data-save="zay_m_plan">Планировочное решение</label>
+            <label><input type="checkbox" data-save="zay_m_dem">План демонтажа</label>
+            <label><input type="checkbox" data-save="zay_m_mon">План монтажа</label>
+            <label><input type="checkbox" data-save="zay_m_meb">Расстановка мебели</label>
+            <label><input type="checkbox" data-save="zay_m_con">Концепция</label>
+            <label><input type="checkbox" data-save="zay_m_viz">Визуализации</label>
+            <label><input type="checkbox" data-save="zay_m_photo">Фото объекта</label>
+            <label><input type="checkbox" data-save="zay_m_eng">Планы инженерных сетей</label>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Формат исходников</label>
+          <select data-save="zay_format">
+            <option>PDF</option><option>DWG</option><option>ArchiCAD</option><option>SketchUp</option><option>Изображения</option><option>Excel</option><option>Смешанный</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Желаемый формат результата</label>
+          <select data-save="zay_result">
+            <option>PDF-альбом</option><option>DWG</option><option>ArchiCAD</option><option>Отдельные листы</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Желаемые сроки</label>
+          <input type="text" data-save="zay_deadline" placeholder="до 20.12.2026">
+        </div>
+        <div class="form-field full">
+          <label>Комментарии</label>
+          <textarea data-save="zay_comment" rows="3" placeholder="Особые требования, ограничения, вопросы"></textarea>
+        </div>
+      </div>
+      <div class="action-bar" style="margin-top: 20px;">
+        <button class="action-btn primary" onclick="openExample('Заявка')">Открыть шаблон-образец</button>
+        <button class="action-btn" onclick="alert('Экспорт заявки в .docx будет в v15.')">Экспорт в Word</button>
+        <button class="action-btn" onclick="clearSection('zay_')">Очистить форму</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+  <!-- Реестр материалов -->
+  <!-- Таб 3: Реестр -->
+<div class="tab-panel" id="panel-3">
+<section class="page-section" id="section-reestr" style="padding-top: 0;">
+    <div class="page-section-header">
+      <div class="page-section-num">Блок 2 · Что должно быть на входе</div>
+      <h2 class="page-section-title">Реестр материалов для первичной оценки</h2>
+      <p class="page-section-lead">Проверьте, какие исходные материалы уже есть, а какие нужно запросить у дизайнера или заказчика. Это основа для предварительной оценки объёма работ и сроков.</p>
+    </div>
+    <div class="page-section-box">
+      <table class="data-table">
+        <thead>
+          <tr><th style="width:40px;">№</th><th>Материал</th><th style="width:160px;">Нужен на входе?</th><th>Статус</th><th>Зачем</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Заявка с описанием задачи</td><td>Да</td><td><select data-save="reestr_1"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Понять, что требуется разработать</td></tr>
+          <tr><td>2</td><td>Тип объекта и площадь</td><td>Да</td><td><select data-save="reestr_2"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Оценить масштаб работ</td></tr>
+          <tr><td>3</td><td>Состав помещений</td><td>Да</td><td><select data-save="reestr_3"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Понять объём и количество чертежей</td></tr>
+          <tr><td>4</td><td>Планировочное решение</td><td>Да</td><td><select data-save="reestr_4"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Оценить состав и сложность чертежей</td></tr>
+          <tr><td>5</td><td>Обмерный план</td><td>Да</td><td><select data-save="reestr_5"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Основа для разработки рабочей документации</td></tr>
+          <tr><td>6</td><td>Концепция или визуализации</td><td>Желательно</td><td><select data-save="reestr_6"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Стилистика, уровень детализации, состав решений</td></tr>
+          <tr><td>7</td><td>План расстановки мебели и оборудования</td><td>Желательно</td><td><select data-save="reestr_7"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Привязки, оборудование, технические зоны</td></tr>
+          <tr><td>8</td><td>Планы демонтажа и монтажа</td><td>При наличии</td><td><select data-save="reestr_8"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Объём работ при перепланировке</td></tr>
+          <tr><td>9</td><td>Фото объекта</td><td>При наличии</td><td><select data-save="reestr_9"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Существующее состояние помещения</td></tr>
+          <tr><td>10</td><td>Сведения о технических ограничениях</td><td>При наличии</td><td><select data-save="reestr_10"><option>Нет</option><option>Запрошен</option><option>Получен</option></select></td><td>Несущие стены, стояки, вентиляция, электрика, тёплый пол, окна</td></tr>
+          <tr><td>11</td><td>Ведомость отделки</td><td>Нет</td><td><select data-save="reestr_11"><option>—</option><option>Собирается в ТЗ</option></select></td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+          <tr><td>12</td><td>Спецификация мебели</td><td>Нет</td><td><select data-save="reestr_12"><option>—</option><option>Собирается в ТЗ</option></select></td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+          <tr><td>13</td><td>Спецификация света</td><td>Нет</td><td><select data-save="reestr_13"><option>—</option><option>Собирается в ТЗ</option></select></td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+          <tr><td>14</td><td>Спецификация сантехники</td><td>Нет</td><td><select data-save="reestr_14"><option>—</option><option>Собирается в ТЗ</option></select></td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+          <tr><td>15</td><td>Детальный состав рабочего альбома</td><td>Нет</td><td><select data-save="reestr_15"><option>—</option><option>Формируется в ТЗ</option></select></td><td>Формируется и утверждается в ТЗ</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top: 18px;"><strong>Короткий текст для клиента:</strong> для предварительной оценки достаточно отправить имеющиеся материалы — планировочное решение, обмерный план, концепцию или визуализации. Полный состав рабочей документации, ведомости и спецификации мы соберём и согласуем на этапе технического задания.</div>
+      <div class="action-bar" style="margin-top: 16px;">
+        <button class="action-btn primary" onclick="openExample('Реестр материалов')">Открыть шаблон-образец</button>
+        <button class="action-btn" onclick="clearSection('reestr_')">Очистить статусы</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+  <!-- Карточка проекта -->
+  <!-- Таб 4: Карточка проекта -->
+<div class="tab-panel" id="panel-4">
+<section class="page-section" id="section-card" style="padding-top: 0;">
+    <div class="page-section-header">
+      <div class="page-section-num">Блок 3 · Трекер текущего проекта</div>
+      <h2 class="page-section-title">Карточка проекта</h2>
+      <p class="page-section-lead">Контроль сроков, статусов и финансов по текущему проекту. Данные сохраняются локально и обновляют прогресс этапов. Один проект — одна карточка.</p>
+    </div>
+  <section class="project-card">
+    <div class="project-card-inner">
+      
+      <div class="project-card-header">
+        <h2>Карточка проекта</h2>
+        <div class="header-meta">
+          <div>
+            <span>Статус</span>
+            <strong>
+              <select id="projectStatus" onchange="saveCardData(); updateProgress()" style="background:transparent; border:none; color:#fff; font-weight:600; font-size:13px; cursor:pointer; -webkit-appearance:none; -moz-appearance:none; appearance:none;">
+                <option value="Новый">Новый</option>
+                <option value="Сбор исходных данных">Сбор исходных данных</option>
+                <option value="Подготовка КП">Подготовка КП</option>
+                <option value="КП на согласовании">КП на согласовании</option>
+                <option value="Формирование ТЗ">Формирование ТЗ</option>
+                <option value="ТЗ на согласовании">ТЗ на согласовании</option>
+                <option value="Подготовка договора">Подготовка договора</option>
+                <option value="Договор на подписи">Договор на подписи</option>
+                <option value="Ожидание оплаты">Ожидание оплаты</option>
+                <option value="Ожидание исходных материалов">Ожидание исходных материалов</option>
+                <option value="В работе">В работе</option>
+                <option value="Передано на проверку">Передано на проверку</option>
+                <option value="Есть замечания">Есть замечания</option>
+                <option value="Корректировки в работе">Корректировки в работе</option>
+                <option value="Ожидает приёмки этапа">Ожидает приёмки этапа</option>
+                <option value="Приостановлен">Приостановлен</option>
+                <option value="Финальная передача">Финальная передача</option>
+                <option value="Завершён">Завершён</option>
+              </select>
+            </strong>
+          </div>
+          <div>
+            <span>Текущий этап</span>
+            <strong style="color:#fff; font-size:13px;">09 / Финальная передача</strong>
+            <span class="card-progress-inline">Этапов: <strong id="cardProgressInline">0</strong>/9</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-grid">
+        
+        <!-- Блок 1: Проект -->
+        <div class="project-block">
+          <h3>Проект</h3>
+          <div class="project-field">
+            <label>Название</label>
+            <input type="text" data-save="card_name" value="Квартира 85 м², Москва" placeholder="Название проекта">
+          </div>
+          <div class="project-field">
+            <label>Клиент / дизайнер</label>
+            <input type="text" data-save="card_client" value="Анна Иванова" placeholder="Имя клиента">
+          </div>
+          <div class="project-field">
+            <label>Объект</label>
+            <input type="text" data-save="card_object" value="Квартира" placeholder="Тип объекта">
+          </div>
+          <div class="project-field">
+            <label>Адрес / название</label>
+            <input type="text" data-save="card_address" value="Москва, ул. Острякова, д. 8" placeholder="Адрес">
+          </div>
+          <div class="project-field">
+            <label>Площадь, м²</label>
+            <input type="number" data-save="card_area" value="85" placeholder="Площадь">
+          </div>
+          <div class="project-field">
+            <label>Стадия проекта</label>
+            <select data-save="card_stage">
+              <option>Концепция</option>
+              <option>Эскизный проект</option>
+              <option selected>Рабочая документация</option>
+              <option>Реализация</option>
+            </select>
+          </div>
+          <div class="project-field">
+            <label>Дата старта</label>
+            <input type="date" data-save="card_start" value="2026-11-01">
+          </div>
+          <div class="project-field">
+            <label>Плановая сдача</label>
+            <input type="date" data-save="card_end" value="2026-12-20">
+          </div>
+        </div>
+
+        <!-- Блок 2: Финансы и договор -->
+        <div class="project-block">
+          <h3>Финансы и договор</h3>
+          <div class="project-field">
+            <label>КП (номер/дата)</label>
+            <input type="text" data-save="card_kp" value="КП-01 от 27.10.2026">
+          </div>
+          <div class="project-field">
+            <label>Статус КП</label>
+            <select data-save="card_kp_status">
+              <option>Черновик</option>
+              <option selected>Отправлено</option>
+              <option>Согласовано</option>
+              <option>Отклонено</option>
+            </select>
+          </div>
+          <div class="project-field">
+            <label>Стоимость</label>
+            <input type="number" data-save="card_cost" value="120000">
+          </div>
+          <div class="project-field">
+            <label>Оплачено</label>
+            <input type="number" data-save="card_paid" value="40000" onchange="updateAutoValues()">
+          </div>
+          <div class="project-field">
+            <label>Остаток к оплате</label>
+            <div class="auto-value" id="auto_rest">80 000 ₽</div>
+          </div>
+          <div class="project-field">
+            <label>Статус оплаты</label>
+            <select data-save="card_payment_status">
+              <option>Ожидает</option>
+              <option selected>Частично</option>
+              <option>Оплачено</option>
+            </select>
+          </div>
+          
+          <h3 style="margin-top: 20px;">Приложения к договору</h3>
+          <ul class="project-docs-list">
+            <li><span>№1 — ТЗ</span><select data-save="doc_tz"><option>Не готово</option><option selected>Утверждено</option><option>На согласовании</option></select></li>
+            <li><span>№2 — Состав проекта</span><select data-save="doc_comp"><option>Не готово</option><option selected>Утверждено</option><option>На согласовании</option></select></li>
+            <li><span>№3 — График платежей</span><select data-save="doc_pay"><option>Не готово</option><option selected>Подписан</option><option>На подписи</option></select></li>
+            <li><span>№4 — График работ</span><select data-save="doc_work"><option>Не готово</option><option selected>Подписан</option><option>На подписи</option></select></li>
+            <li><span>№5 — Стоимость корректировок</span><select data-save="doc_corr"><option>Не готово</option><option selected>Подписано</option><option>На подписи</option></select></li>
+            <li><span>№6 — Согласие на ОПД</span><select data-save="doc_pd"><option>Не готово</option><option selected>Есть</option><option>Нужно подписать</option></select></li>
+          </ul>
+        </div>
+
+        <!-- Блок 3: Производство (вкладки) -->
+        <div class="project-block full-width" style="padding: 0;">
+          <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'tab-production')">Производство</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-notes')">Замечания</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-files')">Файлы</button>
+          </div>
+
+          <!-- Вкладка Производство -->
+          <div id="tab-production" class="tab-content active" style="padding: 24px 32px;">
+            <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Технические блоки</h3>
+            <table class="card-table">
+              <thead>
+                <tr>
+                  <th>Блок</th>
+                  <th>Дата передачи</th>
+                  <th>Срок проверки</th>
+                  <th>Статус</th>
+                  <th>Акт</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Планы</td>
+                  <td><input type="date" data-save="block1_date"></td>
+                  <td><input type="date" data-save="block1_check"></td>
+                  <td>
+                    <select class="status-select" data-save="block1_status">
+                      <option>Не начат</option><option selected>В работе</option><option>Ожидает исходных данных</option><option>Передан на проверку</option><option>Есть замечания</option><option>Корректировки в работе</option><option>Повторная передача</option><option>Согласован</option><option>Принят актом</option><option>Отменён</option>
+                    </select>
+                  </td>
+                  <td><input type="text" data-save="block1_act" placeholder="—"></td>
+                </tr>
+                <tr>
+                  <td>Развёртки</td>
+                  <td><input type="date" data-save="block2_date"></td>
+                  <td><input type="date" data-save="block2_check"></td>
+                  <td>
+                    <select class="status-select" data-save="block2_status">
+                      <option>Не начат</option><option>В работе</option><option>Ожидает исходных данных</option><option>Передан на проверку</option><option>Есть замечания</option><option>Корректировки в работе</option><option>Повторная передача</option><option>Согласован</option><option>Принят актом</option><option>Отменён</option>
+                    </select>
+                  </td>
+                  <td><input type="text" data-save="block2_act" placeholder="—"></td>
+                </tr>
+                <tr>
+                  <td>Узлы и детали</td>
+                  <td><input type="date" data-save="block3_date"></td>
+                  <td><input type="date" data-save="block3_check"></td>
+                  <td>
+                    <select class="status-select" data-save="block3_status">
+                      <option>Не начат</option><option>В работе</option><option>Ожидает исходных данных</option><option>Передан на проверку</option><option>Есть замечания</option><option>Корректировки в работе</option><option>Повторная передача</option><option>Согласован</option><option>Принят актом</option><option>Отменён</option>
+                    </select>
+                  </td>
+                  <td><input type="text" data-save="block3_act" placeholder="—"></td>
+                </tr>
+                <tr>
+                  <td>Спецификации</td>
+                  <td><input type="date" data-save="block4_date"></td>
+                  <td><input type="date" data-save="block4_check"></td>
+                  <td>
+                    <select class="status-select" data-save="block4_status">
+                      <option>Не начат</option><option>В работе</option><option>Ожидает исходных данных</option><option>Передан на проверку</option><option>Есть замечания</option><option>Корректировки в работе</option><option>Повторная передача</option><option>Согласован</option><option>Принят актом</option><option>Отменён</option>
+                    </select>
+                  </td>
+                  <td><input type="text" data-save="block4_act" placeholder="—"></td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="progress-bar-container" style="margin-top: 24px;">
+              <span style="font-size: 12px; font-weight: 600;">Прогресс проекта:</span>
+              <div class="bar"><div class="bar-fill" id="cardProgressFill" style="width: 0%;"></div></div>
+              <span class="count" id="cardProgressCount">0%</span>
+            </div>
+          </div>
+
+          <!-- Вкладка Замечания -->
+          <div id="tab-notes" class="tab-content" style="padding: 24px 32px;">
+            <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Реестр замечаний</h3>
+            <table class="card-table">
+              <thead>
+                <tr>
+                  <th>№</th>
+                  <th>Замечание</th>
+                  <th>Тип</th>
+                  <th>Статус</th>
+                  <th>Срок</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><input type="text" data-save="note1_text" placeholder="Пример замечания"></td>
+                  <td><select data-save="note1_type"><option>В рамках ТЗ</option><option>За пределами ТЗ</option></select></td>
+                  <td><select data-save="note1_status"><option>В работе</option><option>Ожидает</option><option>Решено</option></select></td>
+                  <td><input type="date" data-save="note1_date"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><input type="text" data-save="note2_text" placeholder=""></td>
+                  <td><select data-save="note2_type"><option>В рамках ТЗ</option><option>За пределами ТЗ</option></select></td>
+                  <td><select data-save="note2_status"><option>В работе</option><option>Ожидает</option><option>Решено</option></select></td>
+                  <td><input type="date" data-save="note2_date"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Вкладка Файлы -->
+          <div id="tab-files" class="tab-content" style="padding: 24px 32px;">
+            <h3 style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">Файлы проекта</h3>
+            <ul class="file-list">
+              <li><span>Исходные материалы</span><a href="#" class="file-link" onclick="alert('Ссылка будет добавлена позже'); return false;">Открыть папку ↗</a></li>
+              <li><span>Промежуточные комплекты</span><a href="#" class="file-link" onclick="alert('Ссылка будет добавлена позже'); return false;">Открыть папку ↗</a></li>
+              <li><span>Итоговый альбом</span><a href="#" class="file-link" onclick="alert('Ссылка будет добавлена позже'); return false;">Открыть папку ↗</a></li>
+              <li><span>Архив проекта</span><a href="#" class="file-link" onclick="alert('Ссылка будет добавлена позже'); return false;">Открыть папку ↗</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Кнопки действий -->
+      <div class="project-actions">
+        <button class="action-btn primary" onclick="openExample('ТЗ')">Открыть ТЗ</button>
+        <button class="action-btn" onclick="openExample('Договор')">Открыть договор</button>
+        <button class="action-btn" onclick="alert('Действие: передать текущий блок на проверку')">Передать блок</button>
+        <button class="action-btn" onclick="alert('Действие: загрузить замечания')">Загрузить замечания</button>
+        <button class="action-btn" onclick="alert('Действие: закрыть этап актом')">Закрыть этап актом</button>
+        <button class="action-btn" onclick="exportCSV()">Экспорт CSV</button>
+        <button class="action-btn" onclick="document.getElementById('tab-files').scrollIntoView({behavior: 'smooth'})">Открыть файлы</button>
+      </div>
+
+    </div>
+  </section>
+  </section>
+</div>
+
+  <!-- Тарифы -->
+  <!-- Таб 5: Купить -->
+<div class="tab-panel" id="panel-5">
+<section class="pricing-section" id="pricing" style="margin-top: 0;">
+    <div class="page-section-header" style="text-align:center;">
+      <div class="page-section-num">Покупка</div>
+      <h2 class="page-section-title">Два варианта доступа</h2>
+      <p class="page-section-lead" style="margin: 0 auto;">Полная система — для тех, кто хочет порядок во всём. Отдельный шаблон — для тех, кому нужен один конкретный документ.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card featured">
+        <div class="pricing-card-label">Рекомендуем</div>
+        <div class="pricing-card-title">Полная система v15</div>
+        <div class="pricing-card-price">7 900 ₽</div>
+        <div class="pricing-card-note">Разовая покупка · бессрочно · обновления в рамках v15</div>
+        <ul>
+          <li>HTML-трекер с 9 этапами и карточкой проекта</li>
+          <li>Excel-инструмент «Заявка → КП» (4 листа, расчёт стоимости)</li>
+          <li>Excel-инструмент «ТЗ дизайн-проекта» (11 листов)</li>
+          <li>Справочник узлов — 1143 позиции</li>
+          <li>Справочник поставщиков — 1478 позиций</li>
+          <li>10 шаблонов документов (заявка, КП, ТЗ, график, договор, акт, замечания, чек-листы)</li>
+          <li>Регламент правок: 2 бесплатных раунда + стоимость дополнительных</li>
+          <li>Локальное сохранение данных в браузере</li>
+        </ul>
+        <a href="#" class="btn-cta primary" id="pricingBuyFull">Купить всё — 7 900 ₽</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card-label">Точечно</div>
+        <div class="pricing-card-title">Отдельный шаблон</div>
+        <div class="pricing-card-price">от 400 ₽</div>
+        <div class="pricing-card-note">.docx + PDF-образец · мгновенная доставка</div>
+        <ul class="templates-mini-list">
+          <li><span>Заявка</span><span class="tpl-price">500 ₽</span></li>
+          <li><span>Реестр материалов</span><span class="tpl-price">400 ₽</span></li>
+          <li><span>КП</span><span class="tpl-price">700 ₽</span></li>
+          <li><span>ТЗ</span><span class="tpl-price">900 ₽</span></li>
+          <li><span>График работ</span><span class="tpl-price">500 ₽</span></li>
+          <li><span>Договор + приложения</span><span class="tpl-price">800 ₽</span></li>
+          <li><span>Акт приёмки</span><span class="tpl-price">400 ₽</span></li>
+          <li><span>Реестр замечаний</span><span class="tpl-price">400 ₽</span></li>
+          <li><span>Чек-лист разработки</span><span class="tpl-price">400 ₽</span></li>
+          <li><span>Чек-лист финала</span><span class="tpl-price">400 ₽</span></li>
+        </ul>
+        <button class="btn-cta outline" onclick="openBuyModal()" style="display:block; width:100%; text-align:center; padding:14px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer;">Выбрать шаблон</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+  <!-- 9 ЭТАПОВ -->
+  <div class="map-container" data-source aria-hidden="true">
+    <!-- 01 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-1" onclick="toggleNode(this)">
+        <span class="node-num">01</span>
+        <h2 class="node-title">Заявка и анализ исходных материалов</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы дизайнер и чертёжник с первого дня знали объём работ — а не выясняли его на третьей неделе по ходу дела.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> определены задача, объект, стадия проекта и наличие базовых исходных материалов. Сформирована основа для подготовки коммерческого предложения.</div>
+      <div class="node-body" id="node-body-1">
+        <ul class="steps-list">
+          <li>Получить заявку и уточнить задачу: разработка полного рабочего альбома, отдельных разделов или доработка существующей документации.</li>
+          <li>Уточнить заказчика, тип объекта, площадь, этажность, состав помещений и стадию дизайн-проекта.</li>
+          <li>Запросить планировочное решение, обмерный план и имеющиеся материалы: концепцию, визуализации, планы демонтажа и монтажа, расстановку мебели и оборудования, фото объекта.</li>
+          <li>Уточнить формат исходников: PDF, DWG, ArchiCAD, SketchUp, изображения или Excel.</li>
+          <li>Проверить читаемость, достаточность и взаимное соответствие полученных материалов.</li>
+          <li>Зафиксировать полученные материалы, недостающие сведения и вопросы, требующие уточнения.</li>
+          <li>Сформировать реестр исходных данных как основание для подготовки коммерческого предложения.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: заявка, реестр полученных и недостающих материалов, список вопросов для предварительной оценки.</div>
+        <div class="node-note">* Ведомости отделки, спецификации мебели, света и сантехники запрашиваются и согласуются на этапе технического задания.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('Заявка')">Открыть форму заявки</button>
+          <button class="action-btn" onclick="openExample('Реестр материалов')">Открыть чек-лист материалов</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-2" onclick="toggleNode(this)">
+        <span class="node-num">02</span>
+        <h2 class="node-title">Коммерческое предложение</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы стоимость, сроки и границы работ были зафиксированы до старта — без «а мы думали, это уже входит».</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> подготовлено и направлено коммерческое предложение с предварительным составом работ, сроками и стоимостью. Получена обратная связь заказчика.</div>
+      <div class="node-body" id="node-body-2">
+        <ul class="steps-list">
+          <li>Проанализировать полученные исходные материалы и определить предварительный объём работ.</li>
+          <li>Определить предварительный состав работ: разрабатываемые разделы, виды чертежей и ожидаемый результат.</li>
+          <li>Оценить сроки и стоимость с учётом площади, состава помещений, стадии проекта и сложности исходных данных.</li>
+          <li>Подготовить коммерческое предложение с составом работ, сроками, стоимостью, порядком оплаты и условиями начала сотрудничества.</li>
+          <li>Указать, что состав работ, детализация и перечень чертежей уточняются в техническом задании.</li>
+          <li>Указать срок действия предложения и основания для его изменения.</li>
+          <li>Направить КП заказчику и зафиксировать дату отправки.</li>
+          <li>Получить обратную связь: согласие, вопросы, запрос корректировки или отказ.</li>
+          <li>Зафиксировать результат рассмотрения КП как основание для перехода к этапу технического задания.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: коммерческое предложение, дата отправки, обратная связь заказчика и согласованные предварительные условия.</div>
+        <div class="node-note">* Коммерческое предложение носит предварительный характер. Итоговый состав работ, детализация, перечень чертежей и сроки закрепляются в техническом задании и договоре.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('КП')">Открыть шаблон КП</button>
+          <button class="action-btn" onclick="openExample('КП')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-3" onclick="toggleNode(this)">
+        <span class="node-num">03</span>
+        <h2 class="node-title">Формирование технического задания</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы состав альбома, детализация и форматы были согласованы один раз — до первой линии, и не возвращались правками на каждое изменение.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> утверждено техническое задание с окончательным составом работ, перечнем чертежей, требованиями к детализации, форматами передачи и порядком внесения изменений.</div>
+      <div class="node-body" id="node-body-3">
+        <ul class="steps-list">
+          <li>Собрать требования и пожелания дизайнера или заказчика.</li>
+          <li>Получить готовое ТЗ либо направить собственную форму для заполнения.</li>
+          <li>Сверить требования с согласованным коммерческим предложением.</li>
+          <li>Уточнить и утвердить перечень помещений и предварительный состав работ, определённый в КП.</li>
+          <li>Определить детальный состав рабочего альбома: планы, схемы, развёртки, узлы, детали и спецификации.</li>
+          <li>Зафиксировать уровень детализации и требования к оформлению чертежей.</li>
+          <li>Определить форматы передачи результатов: PDF, DWG, ArchiCAD и другие согласованные форматы.</li>
+          <li>Зафиксировать перечень необходимых исходных материалов и ответственных за их предоставление.</li>
+          <li>Зафиксировать ограничения, технические условия и особые требования проекта.</li>
+          <li>Определить порядок передачи материалов, предоставления замечаний и внесения изменений.</li>
+          <li>Согласовать и утвердить ТЗ как приложение № 1 к договору.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: согласованное техническое задание — приложение № 1 к договору.</div>
+        <div class="node-note">* Изменения после утверждения ТЗ рассматриваются отдельно. Если они влияют на состав, стоимость или сроки работ, оформляется дополнительное соглашение.</div>
+        <div class="action-bar">
+          <a href="./tz.html" target="_blank" class="action-btn primary">Открыть шаблон ТЗ</a>
+          <button class="action-btn" onclick="openExample('ТЗ')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-4" onclick="toggleNode(this)">
+        <span class="node-num">04</span>
+        <h2 class="node-title">Планирование и график работ</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы чертёжник, проектировщик и дизайнер знали даты передачи блоков — без «когда вам сдать электрику?» в личке каждую неделю.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> утверждён график работ с техническими блоками, датами передачи промежуточных результатов, сроками проверки и приёмки этапов.</div>
+      <div class="node-body" id="node-body-4">
+        <ul class="steps-list">
+          <li>Сформировать график на основании утверждённого технического задания и согласованного состава работ.</li>
+          <li>Разделить проект на технические блоки: по видам чертежей, группам помещений или этапам передачи.</li>
+          <li>Распределить утверждённый состав чертежей по техническим блокам.</li>
+          <li>Определить последовательность разработки и передачи промежуточных результатов.</li>
+          <li>Установить плановые даты передачи каждого технического блока.</li>
+          <li>Установить сроки проверки, предоставления замечаний и внесения корректировок.</li>
+          <li>Определить даты промежуточной приёмки и итоговой передачи документации.</li>
+          <li>Учесть сроки предоставления исходных материалов и возможные зависимости между этапами.</li>
+          <li>Согласовать график и утвердить его как приложение № 4 к договору.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: согласованный график работ — приложение № 4 к договору.</div>
+        <div class="node-note">* Сроки исчисляются с даты выполнения условий начала работ: подписания договора, поступления оплаты и получения необходимых исходных материалов. Задержка предоставления исходных данных может сдвигать сроки выполнения работ.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('График')">Открыть шаблон графика</button>
+          <button class="action-btn" onclick="openExample('График')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-5" onclick="toggleNode(this)">
+        <span class="node-num">05</span>
+        <h2 class="node-title">Договор и начало работ</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы границы правок, порядок оплаты и ответственность были на бумаге — а не выяснялись в переписке после срыва срока.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> заключён договор с приложениями, закреплены состав рабочего проекта, стоимость, график платежей и выполнения работ, порядок корректировок и приёмки. Выполнены условия начала работ и зафиксирована дата старта.</div>
+      <div class="node-body" id="node-body-5">
+        <ul class="steps-list">
+          <li>Подготовить договор на основании согласованного технического задания, состава рабочего проекта и графика выполнения работ.</li>
+          <li>Проверить комплектность приложений: ТЗ, состав рабочего проекта, график платежей, график выполнения работ, стоимость корректировок и согласие на обработку персональных данных.</li>
+          <li>Зафиксировать предмет договора, состав работ и перечень передаваемых результатов.</li>
+          <li>Закрепить стоимость работ, этапность и порядок оплаты согласно графику платежей.</li>
+          <li>Определить сроки и последовательность разработки согласно графику выполнения работ.</li>
+          <li>Зафиксировать порядок передачи промежуточных и итоговых результатов.</li>
+          <li>Закрепить сроки проверки, порядок предоставления замечаний и оформление актов сдачи-приёмки.</li>
+          <li>Зафиксировать порядок корректировок и условия выполнения работ за пределами утверждённого состава.</li>
+          <li>Определить ответственность сторон за предоставление исходных данных и соблюдение сроков.</li>
+          <li>Закрепить права на созданную рабочую документацию и порядок её использования.</li>
+          <li>Включить согласие на обработку персональных данных в комплект документов.</li>
+          <li>Согласовать и подписать договор со всеми приложениями.</li>
+          <li>Выполнить условия начала работ: подписание договора, поступление оплаты согласно графику платежей и получение необходимых исходных материалов.</li>
+          <li>Зафиксировать дату начала работ.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: подписанный договор с приложениями № 1–6, подтверждение оплаты, полученные исходные материалы и дата начала работ.</div>
+        <div class="node-note">* Работы считаются начатыми после выполнения условий старта, предусмотренных договором. Корректировки и дополнительные работы выполняются в соответствии с приложением № 5 «Стоимость корректировок»; изменения, влияющие на состав или сроки, согласовываются отдельно.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('Договор')">Открыть структуру договора</button>
+          <button class="action-btn" onclick="openExample('Договор')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-6" onclick="toggleNode(this)">
+        <span class="node-num">06</span>
+        <h2 class="node-title">Разработка документации</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы каждый блок шёл по чек-листу — и не возвращался с правками из-за забытого узла, развёртки или спецификации.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> разработан промежуточный комплект рабочей документации в соответствии с ТЗ, составом рабочего проекта и графиком выполнения работ.</div>
+      <div class="node-body" id="node-body-6">
+        <ul class="steps-list">
+          <li>Разработать документацию текущего технического блока в соответствии с ТЗ, составом рабочего проекта и графиком.</li>
+          <li>Проверить соответствие решений исходным данным, планировке и согласованным требованиям.</li>
+          <li>Проверить взаимную согласованность чертежей внутри блока.</li>
+          <li>Проработать узлы, стыковки, конструктивные и отделочные решения в рамках утверждённого состава.</li>
+          <li>Выявить противоречия в исходных данных и зафиксировать вопросы, требующие уточнения.</li>
+          <li>Получить разъяснения и согласовать решения, влияющие на разработку.</li>
+          <li>Провести внутреннюю проверку полноты, читаемости и качества комплекта.</li>
+          <li>Сформировать комплект документации текущего блока для передачи на проверку.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: промежуточный комплект чертежей, реестр вопросов и согласованных технических решений.</div>
+        <div class="node-note">* Этап выполняется последовательно для каждого технического блока согласно графику выполнения работ.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('Разработка')">Открыть чек-лист разработки</button>
+          <button class="action-btn" onclick="openExample('Разработка')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-7" onclick="toggleNode(this)">
+        <span class="node-num">07</span>
+        <h2 class="node-title">Сдача этапа и акт</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы сдача актом закрывала финансовые обязательства — и не порождала спор «это мы не согласовали» через месяц.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> комплект текущего этапа передан, проверен заказчиком, замечания обработаны или отсутствуют, этап принят по акту.</div>
+      <div class="node-body" id="node-body-7">
+        <ul class="steps-list">
+          <li>Передать комплект документации текущего этапа заказчику согласованным способом.</li>
+          <li>Зафиксировать дату передачи и подтвердить получение материалов.</li>
+          <li>Запустить срок проверки, установленный договором и графиком выполнения работ.</li>
+          <li>Получить консолидированный список замечаний либо подтверждение согласования результата.</li>
+          <li>При наличии замечаний передать их на обработку в рамках этапа 08.</li>
+          <li>Внести согласованные корректировки в пределах утверждённого ТЗ и состава рабочего проекта.</li>
+          <li>Повторно передать комплект на проверку, если корректировки требуют повторного согласования.</li>
+          <li>Получить подтверждение согласования либо зафиксировать отсутствие замечаний.</li>
+          <li>Оформить акт сдачи-приёмки выполненных работ по текущему этапу.</li>
+          <li>Перейти к следующему техническому блоку после приёмки текущего этапа.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: подтверждение передачи комплекта, согласование результата или реестр замечаний, акт сдачи-приёмки этапа.</div>
+        <div class="node-note">* При отсутствии замечаний в установленный срок этап считается принятым и закрывается актом сдачи-приёмки.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('Приёмка')">Открыть шаблон акта</button>
+          <button class="action-btn" onclick="openExample('Приёмка')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-8" onclick="toggleNode(this)">
+        <span class="node-num">08</span>
+        <h2 class="node-title">Корректировки и изменения</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы 2 бесплатных раунда правок были зафиксированы — а всё, что дальше, шло за отдельную плату по приложению №5.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> замечания рассмотрены, корректировки в рамках ТЗ выполнены, изменения состава или объёма согласованы согласно приложению № 5.</div>
+      <div class="node-body" id="node-body-8">
+        <ul class="steps-list">
+          <li>Получить замечания единым консолидированным списком в установленный срок.</li>
+          <li>Проверить каждое замечание на соответствие ТЗ, составу рабочего проекта и ранее согласованным решениям.</li>
+          <li>Разделить замечания на корректировки в рамках утверждённого объёма и изменения исходных данных, концепции или состава работ.</li>
+          <li>Оценить влияние изменений на стоимость, сроки и состав документации.</li>
+          <li>Согласовать стоимость и сроки корректировок согласно приложению № 5 «Стоимость корректировок».</li>
+          <li>Внести согласованные исправления в пределах утверждённого объёма работ.</li>
+          <li>Обновить комплект документации и зафиксировать внесённые изменения.</li>
+          <li>Повторно передать материалы на проверку в рамках этапа 07 либо в составе итоговой передачи по этапу 09.</li>
+          <li>Зафиксировать результаты обработки замечаний и согласованные изменения.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: реестр замечаний с результатами обработки, обновлённый комплект документации, согласование стоимости и сроков корректировок.</div>
+        <div class="node-note">* Корректировки в рамках утверждённого ТЗ и состава рабочего проекта выполняются без изменения стоимости. Изменения исходных данных, концепции или объёма работ согласовываются отдельно до начала их выполнения.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('Замечания')">Открыть реестр замечаний</button>
+          <button class="action-btn" onclick="openExample('Замечания')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 -->
+    <div class="node">
+      <button class="node-header" type="button" aria-expanded="true" aria-controls="node-body-9" onclick="toggleNode(this)">
+        <span class="node-num">09</span>
+        <h2 class="node-title">Финальная передача комплекта</h2>
+        <span class="toggle-icon">−</span>
+      </button>
+      <div class="node-why">
+        <span class="why-label">Почему это важно</span>
+        <p class="why-text">Чтобы итоговый альбом передавался по чек-листу — без «ой, один файл забыли, второй не открывается» в день сдачи объекта.</p>
+      </div>
+      <div class="node-result"><strong>Результат:</strong> итоговый комплект рабочей документации передан заказчику, все этапы приняты, работы завершены и заархивированы.</div>
+      <div class="node-body" id="node-body-9">
+        <ul class="steps-list">
+          <li>Проверить выполнение и приёмку всех технических блоков, предусмотренных графиком выполнения работ.</li>
+          <li>Проверить наличие подписанных актов сдачи-приёмки по этапам.</li>
+          <li>Сверить итоговый комплект с ТЗ и составом рабочего проекта.</li>
+          <li>Убедиться, что согласованные замечания и корректировки отражены в финальной версии.</li>
+          <li>Провести финальную проверку согласованности разделов и комплектности документации.</li>
+          <li>Сформировать итоговый альбом рабочей документации в PDF и других согласованных форматах.</li>
+          <li>Передать итоговый комплект заказчику согласованным способом и зафиксировать дату передачи.</li>
+          <li>Передать исходные файлы проекта, если такая передача предусмотрена договором.</li>
+          <li>Оформить итоговый акт сдачи-приёмки выполненных работ.</li>
+          <li>Заархивировать итоговую версию проекта, включая исходные материалы, согласованные документы, промежуточные комплекты и финальные файлы.</li>
+        </ul>
+        <div class="node-fix">📌 Фиксация: итоговый альбом рабочей документации, итоговый акт сдачи-приёмки, переданные файлы и архив проекта.</div>
+        <div class="node-note">* Итоговый акт оформляется после передачи полного комплекта, предусмотренного ТЗ и составом рабочего проекта, и урегулирования всех согласованных замечаний.</div>
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="openExample('Финальная передача')">Открыть чек-лист передачи</button>
+          <button class="action-btn" onclick="openExample('Финальная передача')">Посмотреть пример</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Футер -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-block">
+        <h5>AZh Interior</h5>
+        <p>Система организации разработки рабочей документации для дизайнеров интерьеров, проектировщиков и чертёжников.</p>
+      </div>
+      <div class="footer-block">
+        <h5>Покупка</h5>
+        <p><a href="#" id="footerBuyFull">Купить всю систему — 7 900 ₽</a></p>
+        <p><a href="#" onclick="openBuyModal(); return false;">Купить отдельный шаблон</a></p>
+        <p>Оплата через Prodamus. Возврат в течение 14 дней.</p>
+      </div>
+      <div class="footer-block">
+        <h5>Контакты</h5>
+        <p>Telegram: <a href="#">@azh_interior</a></p>
+        <p>Email: <a href="#">hello@azh-interior.ru</a></p>
+        <p>Версия: v15 · 2026</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 AZh Interior. Все материалы — объект авторского права. Распространение без лицензии запрещено.
+    </div>
+  </footer>
+
+  <!-- Модалка покупки шаблонов -->
+  <div class="modal-overlay" id="buyTemplatesModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeBuyModal()">×</button>
+      <h3>Купить отдельный шаблон</h3>
+      <p>Выберите нужный шаблон из системы. Каждый шаблон — редактируемый файл .docx + PDF-образец. После оплаты через Prodamus ссылка на скачивание приходит автоматически.</p>
+      <div class="templates-modal-grid">
+        <div class="tpl-row">
+          <div><div class="tpl-name">Заявка на разработку</div><span class="tpl-desc">Форма первичного обращения клиента</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('Заявка'); return false;">Превью</a>
+          <div class="tpl-price-cell">500 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="Заявка">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Реестр материалов</div><span class="tpl-desc">Чек-лист исходных данных для оценки</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('Реестр материалов'); return false;">Превью</a>
+          <div class="tpl-price-cell">400 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="Реестр материалов">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Коммерческое предложение</div><span class="tpl-desc">Шаблон КП с составом, сроками, стоимостью</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('КП'); return false;">Превью</a>
+          <div class="tpl-price-cell">700 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="КП">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Техническое задание</div><span class="tpl-desc">Структура ТЗ — приложение №1 к договору</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('ТЗ'); return false;">Превью</a>
+          <div class="tpl-price-cell">900 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="ТЗ">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">График работ</div><span class="tpl-desc">Шаблон графика — приложение №4</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('График'); return false;">Превью</a>
+          <div class="tpl-price-cell">500 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="График">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Договор и приложения</div><span class="tpl-desc">Структура договора + приложения №1–6</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('Договор'); return false;">Превью</a>
+          <div class="tpl-price-cell">800 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="Договор">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Акт приёмки этапа</div><span class="tpl-desc">Шаблон акта сдачи-приёмки</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('Приёмка'); return false;">Превью</a>
+          <div class="tpl-price-cell">400 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="Приёмка">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Реестр замечаний</div><span class="tpl-desc">Таблица для сбора и обработки правок</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('Замечания'); return false;">Превью</a>
+          <div class="tpl-price-cell">400 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="Замечания">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Чек-лист разработки</div><span class="tpl-desc">Что проверить перед передачей этапа</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('Разработка'); return false;">Превью</a>
+          <div class="tpl-price-cell">400 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="Разработка">Купить</a>
+        </div>
+        <div class="tpl-row">
+          <div><div class="tpl-name">Чек-лист финальной передачи</div><span class="tpl-desc">Что проверить перед закрытием проекта</span></div>
+          <a class="tpl-preview" href="#" onclick="openExample('Финальная передача'); return false;">Превью</a>
+          <div class="tpl-price-cell">400 ₽</div>
+          <a class="tpl-buy" href="#" data-tpl="Финальная передача">Купить</a>
+        </div>
+      </div>
+      <div class="note" style="margin-top:18px;"><strong>Выгоднее всё вместе:</strong> полная система — 7 900 ₽ (все 10 шаблонов + HTML-трекер + 2 Excel-инструмента с библиотекой 1143 узла и 1478 поставщиков). <a href="#" id="buyModalFullLink" style="color:var(--gold); font-weight:600;">Купить всю систему →</a></div>
+    </div>
+  </div>
+
+  <!-- Модальное окно -->
+  <div class="modal-overlay" id="exampleModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h3 id="modalTitle">Пример документа</h3>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Кнопка Наверх -->
+  <button class="back-to-top" id="backToTop" aria-label="Вернуться наверх">↑</button>
+
+  <script>
+    // --- 1. Логика раскрытия/сворачивания ---
+    function toggleNode(headerElem) {
+      const body = document.getElementById(headerElem.getAttribute('aria-controls'));
+      const icon = headerElem.querySelector('.toggle-icon');
+      const isExpanded = headerElem.getAttribute('aria-expanded') === 'true';
+      
+      if (isExpanded) {
+        body.classList.add('collapsed');
+        headerElem.setAttribute('aria-expanded', 'false');
+        icon.textContent = '+';
+      } else {
+        body.classList.remove('collapsed');
+        headerElem.setAttribute('aria-expanded', 'true');
+        icon.textContent = '−';
+      }
+    }
+
+    function collapseAll() {
+      document.querySelectorAll('.node-body').forEach(b => b.classList.add('collapsed'));
+      document.querySelectorAll('.node-header').forEach(h => {
+        h.setAttribute('aria-expanded', 'false');
+        h.querySelector('.toggle-icon').textContent = '+';
+      });
+    }
+
+    function expandAll() {
+      document.querySelectorAll('.node-body').forEach(b => b.classList.remove('collapsed'));
+      document.querySelectorAll('.node-header').forEach(h => {
+        h.setAttribute('aria-expanded', 'true');
+        h.querySelector('.toggle-icon').textContent = '−';
+      });
+    }
+
+    // --- 2. Сохранение карточки и таблиц ---
+    document.querySelectorAll('[data-save]').forEach(el => {
+      const key = 'azh_card_' + el.dataset.save;
+      const saved = localStorage.getItem(key);
+      if (saved !== null) {
+        if (el.type === 'checkbox') el.checked = saved === 'true';
+        else el.value = saved;
+      }
+      el.addEventListener('input', () => {
+        localStorage.setItem(key, el.type === 'checkbox' ? el.checked : el.value);
+        if (el.dataset.save === 'card_paid' || el.dataset.save === 'card_cost') updateAutoValues();
+        if (el.classList.contains('status-select') || el.id === 'projectStatus') updateCardProgress();
+      });
+    });
+
+    function saveCardData() {
+      document.querySelectorAll('[data-save]').forEach(el => {
+        const key = 'azh_card_' + el.dataset.save;
+        localStorage.setItem(key, el.type === 'checkbox' ? el.checked : el.value);
+      });
+    }
+
+    // --- 3. Автоматический расчет остатка ---
+    function updateAutoValues() {
+      const cost = parseFloat(document.querySelector('[data-save="card_cost"]')?.value) || 0;
+      const paid = parseFloat(document.querySelector('[data-save="card_paid"]')?.value) || 0;
+      const rest = cost - paid;
+      document.getElementById('auto_rest').textContent = rest.toLocaleString('ru-RU') + ' ₽';
+    }
+
+    // --- 4. Прогресс карточки ---
+    function updateCardProgress() {
+      const statuses = [
+        document.querySelector('[data-save="block1_status"]')?.value,
+        document.querySelector('[data-save="block2_status"]')?.value,
+        document.querySelector('[data-save="block3_status"]')?.value,
+        document.querySelector('[data-save="block4_status"]')?.value
+      ];
+      const total = statuses.filter(Boolean).length;
+      const done = statuses.filter(s => s === 'Принят актом' || s === 'Согласован').length;
+      const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+      
+      document.getElementById('cardProgressFill').style.width = percent + '%';
+      document.getElementById('cardProgressCount').textContent = percent + '%';
+      
+      // Обновляем общий прогресс этапов
+      updateProgress();
+    updateBadges();
+    }
+
+    function updateProgress() {
+      // Считаем завершенные этапы по статусу в карточке
+      const projectStatus = document.getElementById('projectStatus').value;
+      let count = 0;
+      if (projectStatus === 'Завершён') count = 9;
+      else if (projectStatus === 'Финальная передача') count = 8;
+      else if (projectStatus === 'Ожидает приёмки этапа') count = 7;
+      else if (projectStatus === 'Корректировки в работе') count = 6;
+      else if (projectStatus === 'Есть замечания') count = 5;
+      else if (projectStatus === 'Передано на проверку') count = 4;
+      else if (projectStatus === 'В работе') count = 3;
+      else if (projectStatus === 'Ожидание оплаты' || projectStatus === 'Ожидание исходных материалов') count = 2;
+      else if (projectStatus === 'Договор на подписи') count = 1;
+      
+      const _pc = document.getElementById('progressCount');
+      if (_pc) _pc.textContent = count;
+      const _cpi = document.getElementById('cardProgressInline');
+      if (_cpi) _cpi.textContent = count;
+    }
+
+    // --- 5. Вкладки в карточке ---
+    function openTab(evt, tabId) {
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(t => t.classList.remove('active'));
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      tabBtns.forEach(b => b.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    // --- 6. Модальное окно ---
+    const modal = document.getElementById('exampleModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+
+    const F = (text) => `<mark class="fill-me">${text}</mark>`;
+
+    const examples = {
+      'Заявка': { 
+        title: 'Форма заявки', 
+        text: 'Отправьте эту форму клиенту или заполните сами при первичном обращении.', 
+        html: `
+          <div class="modal-pre">ЗАЯВКА НА РАЗРАБОТКУ РАБОЧЕЙ ДОКУМЕНТАЦИИ
+
+1. Заказчик / дизайнер:
+${F('________________________________________')}
+
+2. Контакт для связи:
+${F('________________________________________')}
+
+3. Объект:
+[ ] Квартира
+[ ] Дом
+[ ] Апартаменты
+[ ] Коммерческое помещение
+
+4. Площадь объекта:
+${F('________ м²')}
+
+5. Этажность:
+${F('________________________________________')}
+
+6. Состав помещений:
+${F('________________________________________')}
+
+7. Стадия проекта:
+[ ] Концепция
+[ ] Эскизный проект
+[ ] Рабочая документация дизайнера
+[ ] Реализация / стройка
+
+8. Задача:
+[ ] Разработка полного рабочего альбома
+[ ] Разработка отдельных разделов
+[ ] Доработка существующей документации
+
+9. Какие материалы уже есть:
+[ ] Обмерный план
+[ ] Планировочное решение
+[ ] План демонтажа
+[ ] План монтажа
+[ ] План расстановки мебели и оборудования
+[ ] Дизайн-концепция
+[ ] Визуализации
+[ ] Фото объекта
+[ ] Планы инженерных сетей
+[ ] Другое: ${F('__________________________')}
+
+10. Формат исходных материалов:
+[ ] PDF
+[ ] DWG
+[ ] ArchiCAD
+[ ] SketchUp
+[ ] Изображения
+[ ] Excel
+[ ] Другое: ${F('__________________________')}
+
+11. Желаемый формат результата:
+[ ] PDF-альбом
+[ ] DWG
+[ ] ArchiCAD
+[ ] Отдельные листы
+[ ] Другое: ${F('__________________________')}
+
+12. Желаемые сроки:
+${F('________________________________________')}
+
+13. Комментарии:
+${F('________________________________________')}</div>
+          <div class="note"><strong>Совет:</strong> эту форму можно распечатать или отправить в виде документа Word.</div>
+        `
+      },
+      'Реестр материалов': { 
+        title: 'Чек-лист материалов для первичной оценки', 
+        text: 'Проверьте, какие материалы уже есть, а какие нужно запросить.', 
+        html: `
+          <table class="data-table" style="min-width: 100%;">
+            <thead>
+              <tr><th>№</th><th>Материал</th><th>Нужен на входе?</th><th>Зачем</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Заявка с описанием задачи</td><td>Да</td><td>Понять, что требуется разработать</td></tr>
+              <tr><td>2</td><td>Тип объекта и площадь</td><td>Да</td><td>Оценить масштаб работ</td></tr>
+              <tr><td>3</td><td>Состав помещений</td><td>Да</td><td>Понять объём и количество разрабатываемых материалов</td></tr>
+              <tr><td>4</td><td>Планировочное решение</td><td>Да</td><td>Оценить состав и сложность чертежей</td></tr>
+              <tr><td>5</td><td>Обмерный план</td><td>Да</td><td>Понять, есть ли основа для разработки рабочей документации</td></tr>
+              <tr><td>6</td><td>Концепция или визуализации</td><td>Желательно</td><td>Понять стилистику, уровень детализации и состав решений</td></tr>
+              <tr><td>7</td><td>План расстановки мебели и оборудования</td><td>Желательно</td><td>Оценить привязки, оборудование и технические зоны</td></tr>
+              <tr><td>8</td><td>Планы демонтажа и монтажа</td><td>При наличии</td><td>Оценить объём работ при перепланировке</td></tr>
+              <tr><td>9</td><td>Фото объекта</td><td>При наличии</td><td>Уточнить существующее состояние помещения</td></tr>
+              <tr><td>10</td><td>Сведения о технических ограничениях</td><td>При наличии</td><td>Учесть несущие стены, стояки, вентиляцию, электрику, тёплый пол и окна</td></tr>
+              <tr><td>11</td><td>Ведомость отделки</td><td>Нет</td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+              <tr><td>12</td><td>Спецификация мебели</td><td>Нет</td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+              <tr><td>13</td><td>Спецификация света</td><td>Нет</td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+              <tr><td>14</td><td>Спецификация сантехники</td><td>Нет</td><td>Собирается и согласовывается на этапе ТЗ</td></tr>
+              <tr><td>15</td><td>Детальный состав рабочего альбома</td><td>Нет</td><td>Формируется и утверждается в ТЗ</td></tr>
+            </tbody>
+          </table>
+          <div class="note"><strong>Короткий текст для клиента:</strong> Для предварительной оценки достаточно отправить имеющиеся материалы: планировочное решение, обмерный план, концепцию или визуализации. Полный состав рабочей документации, ведомости и спецификации мы соберём и согласуем на этапе технического задания.</div>
+        `
+      },
+      'КП': { 
+        title: 'Шаблон коммерческого предложения', 
+        text: 'Готовый шаблон для отправки клиенту. Желтым выделены поля для заполнения.', 
+        html: `
+          <div class="modal-pre">КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ
+на разработку рабочей документации
+
+Дата: ${F('__.__.____')}
+Действительно до: ${F('__.__.____')}
+
+Заказчик / дизайнер:
+${F('________________________________________')}
+
+Объект:
+${F('________________________________________')}
+
+Площадь:
+${F('________ м²')}
+
+Основание для расчёта:
+Полученные исходные материалы и информация, указанная в заявке.
+
+1. ПРЕДМЕТ ПРЕДЛОЖЕНИЯ
+
+Разработка рабочей документации для реализации дизайн-проекта объекта:
+${F('________________________________________')}
+
+2. ПРЕДВАРИТЕЛЬНЫЙ СОСТАВ РАБОТ
+
+[ ] Обмерные чертежи
+[ ] Планы демонтажа и монтажа
+[ ] Планы расстановки мебели и оборудования
+[ ] План отделки
+[ ] План потолков
+[ ] План освещения
+[ ] План электрики
+[ ] План сантехники
+[ ] План тёплого пола
+[ ] Развёртки стен
+[ ] Узлы и детали
+[ ] Ведомости отделки
+[ ] Спецификации
+[ ] Итоговый PDF-альбом
+
+3. ЧТО НЕ ВКЛЮЧЕНО В ПРЕДЛОЖЕНИЕ
+
+- Внесение изменений после утверждения ТЗ, если они меняют состав или объём работ.
+- Разработка разделов, не указанных в настоящем предложении.
+- Согласование документации с управляющей компанией, БТИ, подрядчиком или другими организациями.
+- Авторский надзор.
+- Работы, требующие дополнительных исходных материалов, не предоставленных заказчиком.
+
+4. СРОКИ
+
+Предварительный срок разработки:
+с ${F('__.__.____')} по ${F('__.__.____')}
+
+Срок начинает исчисляться с даты выполнения условий начала работ:
+- подписание договора и приложений;
+- поступление оплаты согласно договору;
+- получение необходимых исходных материалов.
+
+5. СТОИМОСТЬ
+
+Стоимость работ:
+${F('________________________________________')}
+
+Порядок оплаты:
+${F('________________________________________')}
+
+6. УСЛОВИЯ
+
+Настоящее предложение носит предварительный характер.
+Итоговый состав работ, перечень чертежей, уровень детализации, форматы передачи и сроки закрепляются в техническом задании и договоре.
+
+При изменении исходных данных, площади, состава помещений, стадии проекта или объёма работ стоимость и сроки могут быть пересмотрены.
+
+7. ПОРЯДОК ДАЛЬНЕЙШИХ ДЕЙСТВИЙ
+
+После согласования коммерческого предложения:
+1. Стороны формируют и согласовывают техническое задание.
+2. Составляется график работ.
+3. Подписывается договор с приложениями.
+4. Выполняются условия начала работ.
+
+Подпись / дата:
+${F('________________________________________')}</div>
+          <div class="note"><strong>Совет:</strong> этот шаблон можно адаптировать под свой бренд и отправить клиенту в PDF.</div>
+        `
+      },
+      'ТЗ': { 
+        title: 'Структура технического задания', 
+        text: 'Примерная структура ТЗ для согласования с дизайнером. Поля для заполнения подсвечены.', 
+        html: `
+          <div class="modal-pre">ТЕХНИЧЕСКОЕ ЗАДАНИЕ
+на разработку рабочей документации
+
+1. ОБЩИЕ ДАННЫЕ
+
+Заказчик / дизайнер:
+${F('________________________________________')}
+
+Объект:
+${F('________________________________________')}
+
+Адрес:
+${F('________________________________________')}
+
+Площадь:
+${F('________ м²')}
+
+Основание:
+Согласованное коммерческое предложение от ${F('__.__.____')}
+
+2. ЗАДАЧА
+
+Разработка рабочей документации для реализации дизайн-проекта.
+
+3. СОСТАВ ПОМЕЩЕНИЙ
+
+| № | Помещение | Площадь | Включено в работу |
+|---|---|---|---|
+| 1 | ${F('__________')} | ${F('____')} | Да / Нет |
+| 2 | ${F('__________')} | ${F('____')} | Да / Нет |
+| 3 | ${F('__________')} | ${F('____')} | Да / Нет |
+
+4. СОСТАВ РАБОЧЕЙ ДОКУМЕНТАЦИИ
+
+[ ] Обмерные чертежи
+[ ] План демонтажа
+[ ] План монтажа
+[ ] План расстановки мебели и оборудования
+[ ] План отделки
+[ ] План потолков
+[ ] План освещения
+[ ] План электрики
+[ ] План сантехники
+[ ] План тёплого пола
+[ ] Развёртки стен
+[ ] Узлы и детали
+[ ] Ведомость отделки
+[ ] Спецификация мебели
+[ ] Спецификация света
+[ ] Спецификация сантехники
+[ ] Итоговый PDF-альбом
+
+5. ТРЕБОВАНИЯ К ДЕТАЛИЗАЦИИ
+
+Уровень детализации:
+[ ] Базовый
+[ ] Стандартный
+[ ] Подробный
+
+Особые требования:
+${F('________________________________________')}
+
+6. ФОРМАТЫ ПЕРЕДАЧИ
+
+[ ] PDF-альбом
+[ ] DWG
+[ ] ArchiCAD
+[ ] Отдельные листы
+[ ] Другое: ${F('__________________________')}
+
+7. ИСХОДНЫЕ МАТЕРИАЛЫ
+
+| № | Материал | Ответственный | Срок предоставления |
+|---|---|---|---|
+| 1 | Обмерный план | ${F('________')} | ${F('________')} |
+| 2 | Планировочное решение | ${F('________')} | ${F('________')} |
+| 3 | Концепция / визуализации | ${F('________')} | ${F('________')} |
+| 4 | Ведомость отделки | ${F('________')} | ${F('________')} |
+| 5 | Спецификации | ${F('________')} | ${F('________')} |
+
+8. ОГРАНИЧЕНИЯ И ОСОБЫЕ УСЛОВИЯ
+
+- Несущие конструкции: ${F('____________________')}
+- Стояки и инженерные сети: ${F('____________________')}
+- Вентиляция: ${F('____________________')}
+- Электрика: ${F('____________________')}
+- Тёплый пол: ${F('____________________')}
+- Окна и проёмы: ${F('____________________')}
+- Другое: ${F('____________________')}
+
+9. ПОРЯДОК СОГЛАСОВАНИЯ
+
+- Материалы передаются согласованным способом.
+- Замечания предоставляются единым списком в срок: ${F('____')} рабочих дней.
+- Корректировки в рамках ТЗ выполняются без изменения стоимости.
+- Изменения, влияющие на состав, стоимость или сроки, согласовываются отдельно.
+
+10. УТВЕРЖДЕНИЕ
+
+Заказчик / дизайнер:
+${F('________________ / ________________')}
+
+Исполнитель:
+${F('________________ / ________________')}
+
+Дата:
+${F('__.__.____')}</div>
+          <div class="note"><strong>Совет:</strong> этот шаблон можно адаптировать под свой проект и использовать как Приложение №1 к договору.</div>
+        `
+      },
+      'График': { 
+        title: 'Шаблон графика работ', 
+        text: 'Готовый шаблон для согласования сроков. Желтым выделены поля для заполнения.', 
+        html: `
+          <div class="modal-pre">ГРАФИК РАБОТ
+по разработке рабочей документации
+
+Объект:
+${F('________________________________________')}
+
+Основание:
+Техническое задание — приложение № 1
+Договор от ${F('__.__.____')}
+
+Дата начала работ:
+${F('__.__.____')}
+
+1. ТЕХНИЧЕСКИЕ БЛОКИ И СРОКИ
+
+| № | Технический блок | Состав работ | Дата передачи | Срок проверки | Дата приёмки |
+|---|---|---|---|---|---|
+| 1 | Планы и схемы | Обмеры, демонтаж/монтаж, расстановка мебели, планы отделки | ${F('__.__.____')} | ${F('____ раб. дней')} | ${F('__.__.____')} |
+| 2 | Потолки, освещение, электрика | План потолков, план освещения, план электрики | ${F('__.__.____')} | ${F('____ раб. дней')} | ${F('__.__.____')} |
+| 3 | Сантехника и тёплый пол | План сантехники, план тёплого пола | ${F('__.__.____')} | ${F('____ раб. дней')} | ${F('__.__.____')} |
+| 4 | Развёртки стен | Развёртки по всем помещениям | ${F('__.__.____')} | ${F('____ раб. дней')} | ${F('__.__.____')} |
+| 5 | Узлы и детали | Конструктивные и отделочные узлы | ${F('__.__.____')} | ${F('____ раб. дней')} | ${F('__.__.____')} |
+| 6 | Спецификации и ведомости | Ведомость отделки, спецификации мебели, света, сантехники | ${F('__.__.____')} | ${F('____ раб. дней')} | ${F('__.__.____')} |
+| 7 | Итоговый комплект | Сводный PDF-альбом и передача файлов | ${F('__.__.____')} | ${F('____ раб. дней')} | ${F('__.__.____')} |
+
+2. УСЛОВИЯ ГРАФИКА
+
+- Сроки начинают исчисляться с даты начала работ.
+- Заказчик предоставляет исходные материалы в согласованные сроки.
+- Проверка каждого блока выполняется в течение ${F('____')} рабочих дней.
+- Замечания предоставляются единым списком.
+- Корректировки в рамках утверждённого ТЗ выполняются без изменения стоимости.
+- При задержке исходных материалов сроки выполнения работ могут быть сдвинуты.
+- Изменения состава работ после утверждения ТЗ согласовываются отдельно.
+
+Подпись заказчика / дизайнера:
+${F('________________________________________')}
+
+Подпись исполнителя:
+${F('________________________________________')}
+
+Дата:
+${F('__.__.____')}</div>
+          <div class="note"><strong>Совет:</strong> этот шаблон можно адаптировать под свой проект и использовать как Приложение №4 к договору.</div>
+        `
+      },
+      'Договор': { 
+        title: 'Договор и приложения', 
+        text: 'Ознакомительная структура договора. Поля для заполнения подсвечены желтым.', 
+        html: `
+          <div class="modal-pre">ДОГОВОР № ${F('___')}
+на выполнение работ по созданию рабочих схем реализации дизайн-проекта
+
+г. ${F('_______________')}                                                                 «${F('___')}» ${F('__________')} 20${F('__')} г.
+
+${F('Жеман Александра Андреевна')}, ИНН ${F('__________')}, применяющая специальный налоговый режим «Налог на профессиональный доход», именуемая в дальнейшем «Подрядчик», с одной стороны, и
+${F('________________________________________')}, паспорт ${F('__________')} именуемая в дальнейшем «Заказчик», с другой стороны, совместно именуемые «Стороны», заключили настоящий Договор о нижеследующем.
+
+1. ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ
+
+1.1. Объект - недвижимость, имеющая адрес и метраж, обозначенный Заказчиком: (данные по документам): ${F('Квартира, г. Москва, ул. ...')}, общей площадью ${F('___')} кв. м.
+...
+3. СТОИМОСТЬ РАБОТ И ПОРЯДОК РАСЧЕТОВ
+3.1. Общая стоимость Рабочего проекта по Договору составляет ${F('___')} рублей 00 копеек, из расчёта ${F('___')} рублей за 1 м2 общей площади объекта.
+...
+10.9. К настоящему Договору прилагаются и являются его неотъемлемой частью:
+Приложение №1 – Техническое задание;
+Приложение №2 – Состав Рабочего проекта;
+Приложение №3 – График платежей;
+Приложение №4 – График выполнения работ;
+Приложение №5 – Стоимость корректировок;
+Приложение №6 – Согласие на обработку персональных данных;
+Акт сдачи-приемки выполненных работ.
+
+13. РЕКВИЗИТЫ СТОРОН
+
+Подрядчик: ${F('Жеман Александра Андреевна')}
+ИНН: ${F('__________')}
+Банк: ${F('ПАО «Сбербанк»')}
+Телефон для переводов через СБП: ${F('+7 __________')}
+Email: ${F('__________')}
+Telegram: ${F('+7 __________')}
+
+Заказчик: ${F('________________________________________')}
+Паспорт: ${F('__________')}
+Адрес регистрации: ${F('__________')}
+Телефон: ${F('+7 __________')}
+Email: ${F('__________')}
+Telegram: ${F('+7 __________')}
+
+Подписи Сторон:
+Подрядчик: ${F('__________ / __________')}
+Заказчик: ${F('__________ / __________')}</div>
+          
+          <div style="margin-top: 20px; border-top: 1px solid var(--line); padding-top: 10px;">
+            <h4 style="font-size: 14px; margin-bottom: 5px; color: var(--ink);">Приложение № 3. График платежей</h4>
+            <div class="modal-pre">Этап | Наименование этапа | % от общ. | Сумма | Срок платежа
+1 | Этап 1. Подготовка рабочих схем | 10% | ${F('5 120,00 руб.')} | В день подписания договора
+2 | Этап 2. Основной комплект схем реализации | 40% | ${F('20 480,00 руб.')} | В день подписания Акта 1-го этапа
+3 | Этап 3. Развертки стен и спецификации | 40% | ${F('20 480,00 руб.')} | В день подписания Акта 2-го этапа
+4 | Этап 4. Формирование итогового альбома | 10% | ${F('5 120,00 руб.')} | В день подписания Акта 3-го этапа</div>
+          </div>
+
+          <div style="margin-top: 20px; border-top: 1px solid var(--line); padding-top: 10px;">
+            <h4 style="font-size: 14px; margin-bottom: 5px; color: var(--ink);">Приложение № 5. Стоимость корректировок</h4>
+            <div class="modal-pre">Применяется после использования 2 бесплатных правок по этапу. Настоящее Приложение устанавливает порядок определения стоимости дополнительных корректировок Рабочего проекта, выполняемых Подрядчиком по инициативе Заказчика.</div>
+          </div>
+          
+          <div class="note"><strong>Важно:</strong> этот шаблон можно адаптировать под свой проект. Договор должен ссылаться на приложения как на неотъемлемую часть.</div>
+        `
+      },
+      'Разработка': { 
+        title: 'Чек-лист разработки', 
+        text: 'Что нужно проверить перед передачей комплекта.', 
+        html: `
+          <ul>
+            <li>Соответствие состава ТЗ и рабочего проекта.</li>
+            <li>Согласованность планов, развёрток и узлов.</li>
+            <li>Наличие всех согласованных решений.</li>
+            <li>Читаемость размеров и привязок.</li>
+            <li>Проверка на противоречия с исходными данными.</li>
+          </ul>
+          <div class="note"><strong>Совет:</strong> используйте этот чек-лист перед каждой передачей этапа.</div>
+        `
+      },
+      'Приёмка': { 
+        title: 'Шаблон акта приёмки этапа', 
+        text: 'Документ, который фиксирует сдачу этапа.', 
+        html: `
+          <div class="modal-pre">АКТ СДАЧИ-ПРИЁМКИ ЭТАПА
+
+г. ${F('_______________')}                                                                 «${F('___')}» ${F('__________')} 20${F('__')} г.
+
+Исполнитель: ${F('____________________')}
+Заказчик: ${F('____________________')}
+
+Основание: Договор № ${F('___')} от «${F('___')}» ${F('__________')} 20${F('__')} г.
+Этап: ${F('____________________')}
+
+1. Переданные материалы:
+- ${F('____________________')}
+- ${F('____________________')}
+
+2. Результат проверки:
+[ ] Замечаний нет
+[ ] Замечания (см. реестр)
+
+3. Сроки:
+Передан: «${F('___')}» ${F('__________')} 20${F('__')} г.
+Проверен: «${F('___')}» ${F('__________')} 20${F('__')} г.
+
+Подписи сторон:
+${F('________________ / ________________')}
+${F('________________ / ________________')}</div>
+          <div class="note"><strong>Совет:</strong> этот шаблон можно адаптировать под свой проект.</div>
+        `
+      },
+      'Замечания': { 
+        title: 'Реестр замечаний', 
+        text: 'Таблица для сбора и обработки замечаний.', 
+        html: `
+          <table class="data-table" style="min-width: 100%;">
+            <thead>
+              <tr><th>№</th><th>Замечание</th><th>Тип</th><th>Статус</th><th>Срок</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>${F('Пример замечания')}</td><td>В рамках ТЗ</td><td>В работе</td><td>${F('__.__.____')}</td></tr>
+              <tr><td>2</td><td>${F('Изменение объёма')}</td><td>За пределами ТЗ</td><td>На согласовании</td><td>${F('__.__.____')}</td></tr>
+            </tbody>
+          </table>
+          <div class="note"><strong>Совет:</strong> используйте этот реестр для фиксации всех замечаний.</div>
+        `
+      },
+      'Финальная передача': { 
+        title: 'Чек-лист финальной передачи', 
+        text: 'Что нужно проверить перед закрытием проекта.', 
+        html: `
+          <ul>
+            <li>Все акты по этапам подписаны.</li>
+            <li>Итоговый комплект соответствует ТЗ и составу проекта.</li>
+            <li>Все замечания обработаны.</li>
+            <li>Итоговый альбом сформирован и передан.</li>
+            <li>Исходные файлы переданы (если предусмотрено).</li>
+            <li>Проект заархивирован.</li>
+          </ul>
+          <div class="note"><strong>Совет:</strong> используйте этот чек-лист перед закрытием проекта.</div>
+        `
+      }
+    };
+
+    function openExample(name) {
+      const data = examples[name];
+      if (!data) return;
+
+      modalTitle.textContent = data.title;
+      
+      let html = `<p>${data.text || ''}</p>`;
+      
+      if (data.html) {
+        html += data.html;
+      } else if (data.items) {
+        html += `<ul>${data.items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+      }
+
+      if (name === 'ТЗ' || name === 'График' || name === 'Договор' || name === 'КП' || name === 'Заявка' || name === 'Реестр материалов' || name === 'Разработка' || name === 'Приёмка' || name === 'Замечания' || name === 'Финальная передача') {
+        // html уже добавлен
+      } else if (!data.html) {
+        html += `<div class="note"><strong>Примечание:</strong> описание структуры. Файл будет позже.</div>`;
+      }
+
+      modalContent.innerHTML = html;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+    // --- 7. Кнопка Наверх ---
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) backToTop.classList.add('visible');
+      else backToTop.classList.remove('visible');
+    });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // --- Инициализация ---
+    updateAutoValues();
+    updateCardProgress();
+    updateProgress();
+
+    // === v14: Конфиг ссылок на оплату Prodamus ===
+    // Замените '#' на реальные ссылки Prodamus для каждого товара.
+    const PRODAMUS = {
+      full: '#',          // Полная система — 7 900 ₽
+      templates: {
+        'Заявка':             '#',   // 500 ₽
+        'Реестр материалов':  '#',   // 400 ₽
+        'КП':                 '#',   // 700 ₽
+        'ТЗ':                 '#',   // 900 ₽
+        'График':             '#',   // 500 ₽
+        'Договор':            '#',   // 800 ₽
+        'Приёмка':            '#',   // 400 ₽
+        'Замечания':          '#',   // 400 ₽
+        'Разработка':         '#',   // 400 ₽
+        'Финальная передача': '#'    // 400 ₽
+      }
+    };
+
+    function applyBuyLinks() {
+      const setLink = (el, link, name) => {
+        if (!el) return;
+        if (link && link !== '#') {
+          el.setAttribute('href', link);
+          el.setAttribute('target', '_blank');
+          el.setAttribute('rel', 'noopener');
+        } else {
+          el.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Ссылка на оплату будет добавлена позже.\n\nЗаменяйте ' + (name ? 'PRODAMUS.templates[\''+name+'\']' : 'PRODAMUS.full') + ' в начале <script> на реальную ссылку Prodamus.');
+          });
+        }
+      };
+      setLink(document.getElementById('buyFullBtn'), PRODAMUS.full, null);
+      setLink(document.getElementById('pricingBuyFull'), PRODAMUS.full, null);
+      setLink(document.getElementById('footerBuyFull'), PRODAMUS.full, null);
+      setLink(document.getElementById('buyModalFullLink'), PRODAMUS.full, null);
+      document.querySelectorAll('[data-tpl]').forEach(btn => {
+        const name = btn.dataset.tpl;
+        setLink(btn, PRODAMUS.templates[name], name);
+      });
+    }
+
+    function openBuyModal() {
+      const m = document.getElementById('buyTemplatesModal');
+      if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    }
+    function closeBuyModal() {
+      const m = document.getElementById('buyTemplatesModal');
+      if (m) { m.classList.remove('active'); document.body.style.overflow = ''; }
+    }
+    function clearSection(prefix) {
+      if (!confirm('Очистить все поля этой секции?')) return;
+      document.querySelectorAll('[data-save]').forEach(el => {
+        if (el.dataset.save.startsWith(prefix)) {
+          const key = 'azh_card_' + el.dataset.save;
+          localStorage.removeItem(key);
+          if (el.type === 'checkbox') el.checked = false;
+          else el.value = '';
+        }
+      });
+      updateAutoValues();
+      updateCardProgress();
+    }
+
+    // === v14: Глобальная очистка и экспорт CSV (исправляет баг оригинала) ===
+    function clearTableData() {
+      if (!confirm('Очистить ВСЕ данные проекта? Это удалит заявку, реестр и карточку из localStorage.')) return;
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('azh_card_'));
+      keys.forEach(k => localStorage.removeItem(k));
+      document.querySelectorAll('[data-save]').forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else el.value = '';
+      });
+      updateAutoValues();
+      updateCardProgress();
+      updateProgress();
+      alert('Очищено полей: ' + keys.length);
+    }
+
+    function exportCSV() {
+      const rows = [];
+      document.querySelectorAll('[data-save]').forEach(el => {
+        const val = el.type === 'checkbox' ? (el.checked ? 'да' : 'нет') : (el.value || '');
+        if (val) rows.push([el.dataset.save, val]);
+      });
+      if (!rows.length) { alert('Нет данных для экспорта.'); return; }
+      let csv = 'Поле;Значение' + String.fromCharCode(10);
+      rows.forEach(([k, v]) => {
+        const esc = String(v).replace(/"/g, '""').replace(/;/g, ',');
+        csv += k + ';"' + esc + '"' + String.fromCharCode(10);
+      });
+      const bom = String.fromCharCode(0xFEFF);
+      const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'azh_project_export.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    document.addEventListener('click', (e) => {
+      const m = document.getElementById('buyTemplatesModal');
+      if (m && e.target === m) closeBuyModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const m = document.getElementById('buyTemplatesModal');
+        if (m && m.classList.contains('active')) closeBuyModal();
+      }
+    });
+    document.addEventListener('DOMContentLoaded', applyBuyLinks);
+
+
+    // === v15: таб-навигация и модалка этапа ===
+    function switchTab(n) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+      const panel = document.getElementById('panel-' + n);
+      const tab = document.querySelector('.app-tab[data-tab="' + n + '"]');
+      if (panel) panel.classList.add('active');
+      if (tab) tab.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openStageModal(n) {
+      const nodes = document.querySelectorAll('.map-container[data-source] .node');
+      const node = nodes[n - 1];
+      if (!node) return;
+      const title = node.querySelector('.node-title')?.textContent || '';
+      const num = node.querySelector('.node-num')?.textContent || '';
+      const why = node.querySelector('.node-why')?.outerHTML || '';
+      const result = node.querySelector('.node-result')?.outerHTML || '';
+      const body = node.querySelector('.node-body');
+      const steps = body?.querySelector('.steps-list')?.outerHTML || '';
+      const fix = body?.querySelector('.node-fix')?.outerHTML || '';
+      const note = body?.querySelector('.node-note')?.outerHTML || '';
+      const actions = body?.querySelector('.action-bar')?.outerHTML || '';
+      modalTitle.textContent = 'Этап ' + num + ' · ' + title;
+      modalContent.innerHTML = '<div class="stage-modal-body">' + why + result + steps + fix + note + actions + '</div>';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function updateBadges() {
+      // Заявка: считаем заполненные поля
+      const zayFields = document.querySelectorAll('[data-save^="zay_"]');
+      let zayFilled = 0;
+      zayFields.forEach(el => {
+        if (el.type === 'checkbox') { if (el.checked) zayFilled++; }
+        else if (el.value && String(el.value).trim()) zayFilled++;
+      });
+      const zayBadge = document.getElementById('badge-zayavka');
+      if (zayBadge) {
+        zayBadge.textContent = zayFilled + '/' + zayFields.length;
+        zayBadge.classList.remove('filled', 'partial');
+        if (zayFilled === zayFields.length && zayFields.length > 0) zayBadge.classList.add('filled');
+        else if (zayFilled > 0) zayBadge.classList.add('partial');
+      }
+
+      // Реестр: считаем позиции со статусом "Получен"
+      const reestrSelects = document.querySelectorAll('[data-save^="reestr_"]');
+      let reestrDone = 0;
+      reestrSelects.forEach(el => { if (el.value === 'Получен') reestrDone++; });
+      const reestrBadge = document.getElementById('badge-reestr');
+      if (reestrBadge) {
+        reestrBadge.textContent = reestrDone + '/' + reestrSelects.length;
+        reestrBadge.classList.remove('filled', 'partial');
+        if (reestrDone >= 10) reestrBadge.classList.add('filled');
+        else if (reestrDone > 0) reestrBadge.classList.add('partial');
+      }
+
+      // Карточка: прогресс из updateProgress
+      const cardInline = document.getElementById('cardProgressInline');
+      const progressCount = document.getElementById('progressCount');
+      if (cardInline && progressCount) {
+        cardInline.textContent = progressCount.textContent;
+      }
+    }
+    // Слушаем изменения всех data-save полей для обновления бейджей
+    document.querySelectorAll('[data-save]').forEach(el => {
+      el.addEventListener('input', updateBadges);
+      el.addEventListener('change', updateBadges);
+    });
+    document.addEventListener('DOMContentLoaded', updateBadges);
+    // Запуск после инициализации (вызывается в конце скрипта)
+  </script>
+</body>
+</html>
